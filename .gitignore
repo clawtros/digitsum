@@ -1,0 +1,3 @@
+.venv-digitsum/
+*.png
+__pycache__/
