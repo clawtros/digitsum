@@ -224,6 +224,16 @@ A serious attempt to pin the constant in `ratio ≈ c/√N`, using exact peak-li
 
 **The way to actually get c**: not extrapolation. The decade transfer map on normalized tank-state distributions should have a fixed point, with c a functional of it and ρ its subleading eigenvalue ratio — computing that spectrum directly from the flood recursion is the well-posed route, and it would deliver ρ ≈ 0.91 as a check.
 
+## The spectral expedition
+
+First execution of that program (`digitsum_spectral.py`): instrument the flood recursion, extract the census of tank states in the top scales normalized as `(depth, d = 9k − K, front signatures)` — d is the tank's offset from the digit-sum mean; the top tank always has d = 1 on the peak line, and children step by `(i+j) − 9`, a centered walk. Three results:
+
+1. **The fixed point is exactly attained, not just approached.** The normalized shallow census is *identical* — exact integer equality, state by state — across every peak-line N tested (116 to 404), at every instrumented depth. The crown of the hierarchy is perfectly self-similar under the decade shift; all N-dependence lives in the deepening diffusive interior. Census sizes per depth: 1, 27, 96, 226, 435 states (55, 4180, 350317, 30748795 tank instances).
+2. **The state family closes.** Transitions are well-defined functions of the truncated-signature classes (577 of 651 classes unambiguous; the 74 failures all sit at d ≤ −35 — deeply submerged near-full tanks that a truncation absorbs anyway). Classes per waterline offset max out at **24** and stop growing. Bonus: the active band is **one-sided** — no active tank ever has d > 1; everything above the waterline is dry.
+3. **The spectrum trends toward ρ but is truncation-limited.** The tank-count transfer matrix on the unambiguous states gives λ₁ → 95.2 (climbing toward the trivial 100 as the d-band widens) and λ₂/λ₁ = 0.577 → 0.777 → **0.860** as truncation depth grows — rising toward the observed ρ ≈ 0.91 but saturating at the depth our SHALLOW=6 instrumentation reaches, i.e. limited by data, not by the trend.
+
+Verdict: the spectral framework is viable and two of its three pillars are now *exact empirical facts* (fixed point, closure). The remaining work is real mathematics: instrument deeper (the band widens like √depth, so memory grows fast), and treat the diffusive d-walk properly — a Markov-additive process whose continuum spectrum is precisely the power-law correction family that fought the geometric term in the c hunt. The 24-classes-per-offset operator with a one-sided boundary at d = 1 is now a concrete, finitely-presented object; c and ρ are functionals of it.
+
 ## OEIS status
 
 The sequence f(N) = 5, 13, 25, 41, 61, 85, 113, 145, 505, 1121, 2025, 3245, 4805, 6725, 9021, 11705, 14785, 47905, 102485, 181533, 287881, 424129, … is **not in OEIS** as of July 2026 (searched the full subsequence and the standalone value 102485). Worth submitting.
@@ -247,5 +257,6 @@ All in this directory. Each writes its output PNG(s) into cwd.
 | `digitsum_bench.py`         | (stdout) four-way solver benchmark with cross-checks |
 | `digitsum_tanks_anybase.py` | base-general tank solver (validations in __main__)  |
 | `digitsum_c.py`             | (stdout) c-constant analysis over `digitsum_peakdata.json` |
+| `digitsum_spectral.py`      | (stdout) decade-map census, closure test, transfer-matrix spectrum |
 
 Run with `.venv-digitsum/bin/python digitsum_<name>.py`. The directed-reachability DP lives in `digitsum_lib.py` (`monotone_quadrant` / `monotone_reach_count`).
