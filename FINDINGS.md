@@ -38,7 +38,7 @@ Rendered comparable reachable regions for bases 2, 3, 4, 5, 10, with N chosen so
 
 Base 2 is densest and closest to a solid diamond — carries happen every step, so cliffs are finely woven. As base grows, carry events become rarer but more violent, punching bigger holes. Base 10 is the noisiest member of this family.
 
-Base 2 specifically connects to known theory (popcount, Kummer's theorem on binomial coefficients mod 2, giving a clean Sierpiński triangle). Base 10 has no known closed form.
+Base 2 specifically connects to known theory (popcount, Kummer's theorem on binomial coefficients mod 2, giving a clean Sierpiński triangle). Base 10 has no known closed form — but base 2 now does: see "The base-2 pilot" below.
 
 ## BFS depth (a wrong turn — later redeemed)
 
@@ -101,7 +101,7 @@ The ratio curve is a **descending Cantor-like staircase** with cliffs at `N = 9,
 - The ratio minimum is *not* at the cliff step: it lands two steps into each decade (N = 11: 0.7324, N = 20: 0.6098, N = 29: 0.5275) before the fill-in overtakes the bbox jump.
 - Within each decade: topology fixed, holes fill in monotonically as N rises by 1.
 - Predicted cliff at `N = 36` **confirmed** (0.6153 → 0.4955, bbox ±9998 → ±19998).
-- Both envelopes decay roughly geometrically (successive drops shrink by ~0.7); extrapolating puts the asymptotic ratio around **0.40–0.47**, tightening the earlier 0.3–0.5 guess.
+- Both envelopes decay roughly geometrically (successive drops shrink by ~0.7); naive extrapolation puts the asymptotic ratio around **0.40–0.47**. *However*, the exact base-2 result (below) shows the base-2 ratio decays to **zero** like `4/√(πN)`, and the observed base-10 envelope is equally consistent with a slow power law `~ c/√(N/9)` (fitted exponents drift −0.30, −0.40, −0.42 toward −½ across the four cliffs). Revised conjecture: **the ratio tends to 0 in every base**, like c·√(base−1)/√N — there is no finite asymptote, just a very slow square-root decay.
 
 ## Peak vs trough comparison
 
@@ -143,7 +143,27 @@ Likely route to a formula: a recurrence indexed by `⌊N / 9⌋` with a correcti
 What is *not* slippery:
 
 - **The constraint set has an exact classical closed form.** The count of `x in [0, 10^d)` with `ds(x) ≤ K` is the partial coefficient sum of `((1−q^10)/(1−q))^d`, i.e. `Σ_j (−1)^j · C(d, j) · C(d + K − 10j, d)` (verified against brute force). The 2D constraint count is a convolution of two of these. All the difficulty lives in the island subtraction.
-- **Base 2 is the tractable pilot.** The monotone lemma holds there too, blocks are 2×2, and budget decrements per digit are at most 1 — the transfer-matrix approach should carry through to an exact formula in base 2 (connecting to the Kummer/Sierpiński structure noted above) before attempting base 10.
+- **Base 2 is the tractable pilot.** The monotone lemma holds there too, blocks are 2×2, and budget decrements per digit are at most 1. **This worked — see the next section**: base 2 has an exact single-binomial closed form.
+
+## The base-2 pilot: an exact closed form
+
+Computing the base-2 quadrant counts with the monotone DP gives Q = 5, 21, 84, 330, 1287, 5005, 19448, … — which are single binomial coefficients. For every N from 1 to 15 (the N = 15 value was *predicted first, then confirmed* by a 4.3-billion-cell DP sweep):
+
+```
+quadrant reachable    Q(N) = C(2N+3, N)
+full-plane reachable  f(N) = 4·C(2N+3, N) − 2^(N+3) + 5
+quadrant constraint   c(N) = (4^(N+1) − C(2N+2, N+1)) / 2
+islands               c(N) − Q(N)  (closed form by subtraction)
+```
+
+(The axis term: every cell 0..2^(N+1)−2 on an axis is reachable, hence 4Q − 4(2^(N+1)−1) + 1.)
+
+Q(N) is OEIS **A002054**, `C(2n+1, n−1)`, a ballot-type binomial with standard lattice-path interpretations ("paths that touch but do not cross the diagonal") — strong evidence that a *bijective proof* exists between reachable cells and ballot paths, presumably via interleaving the bits of x and y along the monotone staircase. That proof is the natural next step; the f(N) sequence 9, 57, 277, 1197, 4897, … is not in OEIS.
+
+Two consequences:
+
+1. **The program works.** Monotone lemma → directed DP → exact closed form, executed end to end in the simplest base. The base-10 analogue is now a concrete target rather than a hope: same machinery, bigger blocks (10×10 instead of 2×2, budget decrements up to 9 per digit).
+2. **The asymptotic ratio is zero, not a constant.** Exactly: `Q(N)/c(N) → 4/√(πN) → 0`. The reachable set is asymptotically a vanishing fraction of the constraint set, decaying like an inverse square root. This overturns the earlier finite-asymptote reading of the base-10 staircase (see the revised conjecture in the staircase section).
 
 ## OEIS status
 
@@ -163,5 +183,6 @@ All in this directory. Each writes its output PNG(s) into cwd.
 | `digitsum_ratio_extended.py`| `digitsum_ratio_extended.png` — extended to N=28         |
 | `digitsum_peak_trough.py`   | `digitsum_peak_trough.png` — per-decade peak vs trough   |
 | `digitsum_monotone.py`      | (stdout) monotone-lemma verification vs BFS; ratio table N=23..36 |
+| `digitsum_base2.py`         | (stdout) base-2 closed form Q(N)=C(2N+3,N) verified vs DP |
 
 Run with `.venv-digitsum/bin/python digitsum_<name>.py`. The directed-reachability DP lives in `digitsum_lib.py` (`monotone_quadrant` / `monotone_reach_count`).
