@@ -67,9 +67,13 @@ print("1D reach count (one-sided, x >= 0) per budget K:")
 for K, c in sorted(counts):
     print(f"  K={K:>2}: {c}")
 
-# sanity: 2D total from factorization over Z^2 within [-MAX_X, MAX_X]
+# sanity: 2D total from factorization over Z^2 within the true BFS bbox ±298.
+# (Using ±MAX_X here would overcount: columns/rows at ±300 are allowed but sit
+# outside the reachable bounding box — this discrepancy caused a wrong gap
+# figure, 66,736 vs the correct 64,488, in an earlier FINDINGS revision.)
+BBOX = 298
 exact = [0] * (N + 2)
-for x in xs:
+for x in range(BBOX + 1):
     s = ds(x)
     if s <= N:
         exact[s] += 1
