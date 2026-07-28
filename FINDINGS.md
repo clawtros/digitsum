@@ -183,6 +183,23 @@ Results:
 
 Where this leaves the closed-form hunt: the gastank recursion gives an exact polynomial-time evaluator — the problem is now *computationally* closed. A single closed-form expression in the base-2 sense is unlikely to exist for base 10 (the layered, budget-graded operator resists collapsing to a fixed-dimensional recurrence), but the constant c and the structure of the state family are both open, well-posed targets.
 
+## Benchmarks
+
+Four solver generations on full-plane f(N), cross-checked wherever two overlap (`digitsum_bench.py`; tanks timed cold — module reloaded per N so memoization doesn't flatter it):
+
+| N   | bfs (set) | bfs (grid) | monotone DP | tanks    | f(N) |
+|----:|----------:|-----------:|------------:|---------:|-----:|
+|  26 |    1.31 s |     1.19 s |     0.009 s |  0.002 s | 1.3 × 10⁶ |
+|  28 |         — |     8.55 s |     0.053 s |  0.003 s | 9.0 × 10⁶ |
+|  36 |         — |          — |     1.98 s  |  0.008 s | 3.8 × 10⁸ |
+|  90 |         — |          — |           — |  0.13 s  | 2.5 × 10²⁰ |
+| 360 |         — |          — |           — |  16.2 s  | ~10⁸⁹ |
+| 630 |         — |          — |           — |  144 s   | ~10¹⁴⁰ |
+
+The BFS variants and the monotone DP are all O(area) = O(10^(2N/9)) — the DP just wins a ~100× vectorization constant, which bought exactly one extra decade (N=36) before the exponential wall. The tank solver's cost tracks its state count, ~N^3.3: polynomial versus exponential, which is the whole story. At N=36 it is ~250× faster than the DP; past N≈40 it is the only game in town.
+
+(Benchmarking exposed that `axis_bound` was a linear scan with a hard cap; it now uses the closed form — smallest x with ds(x) = N+1 is digit s followed by q nines where N+1 = 9q+s — verified against scans across bases.)
+
 ## OEIS status
 
 The sequence f(N) = 5, 13, 25, 41, 61, 85, 113, 145, 505, 1121, 2025, 3245, 4805, 6725, 9021, 11705, 14785, 47905, 102485, 181533, 287881, 424129, … is **not in OEIS** as of July 2026 (searched the full subsequence and the standalone value 102485). Worth submitting.
@@ -203,5 +220,6 @@ All in this directory. Each writes its output PNG(s) into cwd.
 | `digitsum_monotone.py`      | (stdout) monotone-lemma verification vs BFS; ratio table N=23..36 |
 | `digitsum_base2.py`         | (stdout) base-2 closed form Q(N)=C(2N+3,N) verified vs DP |
 | `digitsum_tanks.py`         | (stdout) gastank solver — exact Q(N) to N=630+ via hash-consed flood recursion |
+| `digitsum_bench.py`         | (stdout) four-way solver benchmark with cross-checks |
 
 Run with `.venv-digitsum/bin/python digitsum_<name>.py`. The directed-reachability DP lives in `digitsum_lib.py` (`monotone_quadrant` / `monotone_reach_count`).

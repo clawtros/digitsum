@@ -61,15 +61,11 @@ def bfs_distances(N, base=10):
 
 def axis_bound(N, base=10):
     """Smallest x > 0 with ds(x) > N — this is also the positive axis reach + 1.
-    Used to size a numpy grid conservatively."""
-    bound = 10
-    while True:
-        for x in range(bound):
-            if ds(x, base) > N:
-                return x
-        bound *= 10
-        if bound > 10_000_000:
-            raise RuntimeError("axis bound exploded")
+    Closed form: the smallest x with ds(x) = N+1 is the digit s followed by
+    q top-digits (base-1), where N+1 = (base-1)*q + s, 1 <= s <= base-1."""
+    s = (N % (base - 1)) + 1
+    q = (N + 1 - s) // (base - 1)
+    return (s + 1) * base ** q - 1
 
 
 def bfs_grid(N, base=10):
