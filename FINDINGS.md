@@ -165,6 +165,24 @@ Two consequences:
 1. **The program works.** Monotone lemma → directed DP → exact closed form, executed end to end in the simplest base. The base-10 analogue is now a concrete target rather than a hope: same machinery, bigger blocks (10×10 instead of 2×2, budget decrements up to 9 per digit).
 2. **The asymptotic ratio is zero, not a constant.** Exactly: `Q(N)/c(N) → 4/√(πN) → 0`. The reachable set is asymptotically a vanishing fraction of the constraint set, decaying like an inverse square root. This overturns the earlier finite-asymptote reading of the base-10 staircase (see the revised conjecture in the staircase section).
 
+## The base-10 transfer: gastanks all the way down
+
+The working mental model — nested tanks of fluid spilling over weirs — turns out to be *exactly* the right formalism, because of one clean fact: **digit sums are carry-free inside a block**. A child tank at digit position `(i, j)` inside a tank of budget K has budget exactly `K − i − j`, at every scale. Carries never appear inside a tank; they *are* the walls between sibling tanks, and every wall separates budgets differing by exactly 1. The whole quadrant is one giant tank `T_k(N)` of 100 child tanks, recursively.
+
+`digitsum_tanks.py` implements this literally. `flood()` takes a tank (scale, budget) plus entry patterns — the fluid levels on its left and bottom edges — floods the children in monotone order passing exit patterns over the weirs, and returns the flooded-cell count plus exit patterns. Two implementation facts matter:
+
+- **The wetting fronts are fractal.** An exit pattern at scale k can have ~9^(k−1) intervals (Cantor-dust structure), so fronts are never expanded: since a front only ever splits on child-tank boundaries, it is stored *hash-consed* — an interned 10-tuple of child-front ids, a DAG node compared by id.
+- **The distinct tank states are few.** Memoizing on (scale, budget, entry fronts): a few hundred distinct states per scale; total states grow only polynomially (~N^3.3). That finiteness *is* the transfer structure — but note it is budget-graded (states are indexed by K as well as scale), i.e. a layered operator, not one fixed matrix.
+
+Results:
+
+- Validated against BFS/DP for all N ≤ 36 and against an independent interval-based implementation for N ≤ 81.
+- **Exact Q(N) to N = 630 in ~2.5 minutes** (Q(630) has 139 digits; brute force capped out at N = 36). Per-N cost is milliseconds at N ≤ 100.
+- **No small recurrence.** Per residue class N mod 9 (the decade frame), Q is not C-finite (orders ≤ 13 excluded by exact Berlekamp–Massey with held-out verification) and not small-holonomic (no polynomial-coefficient recurrence with order ≤ 6, degree ≤ 8; detector validated on holonomic controls). Crucially, the *constraint* count fails the identical test, so this is not evidence that reachability is wilder than the constraint set — both are double-indexed sequences (N and the scale k = ⌊N/9⌋+1 move together). Base 2 escaped only because its constraint sum telescopes at the central binomial; base 10's cutoff sits near but not at the center of its digit-sum distribution, and no such collapse occurs.
+- **The √N decay law is confirmed in base 10.** Along the peak line N ≡ 8 (mod 9), `ratio · √N` converges cleanly: 3.641 (N=35), 3.822 (N=107), 3.861 (N=251), 3.868 (N=449), **3.869 (N=629)**. So reachable/constraint ≈ c/√N with c ≈ 3.87 (numerically close to √15 ≈ 3.8730, offered as a guess only), the base-10 sibling of the exact base-2 law 4/√(πN).
+
+Where this leaves the closed-form hunt: the gastank recursion gives an exact polynomial-time evaluator — the problem is now *computationally* closed. A single closed-form expression in the base-2 sense is unlikely to exist for base 10 (the layered, budget-graded operator resists collapsing to a fixed-dimensional recurrence), but the constant c and the structure of the state family are both open, well-posed targets.
+
 ## OEIS status
 
 The sequence f(N) = 5, 13, 25, 41, 61, 85, 113, 145, 505, 1121, 2025, 3245, 4805, 6725, 9021, 11705, 14785, 47905, 102485, 181533, 287881, 424129, … is **not in OEIS** as of July 2026 (searched the full subsequence and the standalone value 102485). Worth submitting.
@@ -184,5 +202,6 @@ All in this directory. Each writes its output PNG(s) into cwd.
 | `digitsum_peak_trough.py`   | `digitsum_peak_trough.png` — per-decade peak vs trough   |
 | `digitsum_monotone.py`      | (stdout) monotone-lemma verification vs BFS; ratio table N=23..36 |
 | `digitsum_base2.py`         | (stdout) base-2 closed form Q(N)=C(2N+3,N) verified vs DP |
+| `digitsum_tanks.py`         | (stdout) gastank solver — exact Q(N) to N=630+ via hash-consed flood recursion |
 
 Run with `.venv-digitsum/bin/python digitsum_<name>.py`. The directed-reachability DP lives in `digitsum_lib.py` (`monotone_quadrant` / `monotone_reach_count`).
