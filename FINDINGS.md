@@ -191,7 +191,7 @@ Results:
 - Validated against BFS/DP for all N ≤ 36 and against an independent interval-based implementation for N ≤ 81.
 - **Exact Q(N) to N = 630 in ~2.5 minutes** (Q(630) has 139 digits; brute force capped out at N = 36). Per-N cost is milliseconds at N ≤ 100.
 - **No small recurrence.** Per residue class N mod 9 (the decade frame), Q is not C-finite (orders ≤ 13 excluded by exact Berlekamp–Massey with held-out verification) and not small-holonomic (no polynomial-coefficient recurrence with order ≤ 6, degree ≤ 8; detector validated on holonomic controls). Crucially, the *constraint* count fails the identical test, so this is not evidence that reachability is wilder than the constraint set — both are double-indexed sequences (N and the scale k = ⌊N/9⌋+1 move together). Base 2 escaped only because its constraint sum telescopes at the central binomial; base 10's cutoff sits near but not at the center of its digit-sum distribution, and no such collapse occurs.
-- **The √N decay law is confirmed in base 10.** Along the peak line N ≡ 8 (mod 9), `ratio · √N` converges cleanly: 3.641 (N=35), 3.822 (N=107), 3.861 (N=251), 3.868 (N=449), **3.869 (N=629)**. So reachable/constraint ≈ c/√N with c ≈ 3.87 (numerically close to √15 ≈ 3.8730, offered as a guess only), the base-10 sibling of the exact base-2 law 4/√(πN).
+- **The √N decay law is confirmed in base 10.** Along the peak line N ≡ 8 (mod 9), `ratio · √N` converges: 3.641 (N=35), 3.822 (N=107), 3.861 (N=251), 3.868 (N=449), 3.869 (N=629). So reachable/constraint ≈ c/√N, the base-10 sibling of the exact base-2 law 4/√(πN). See "Hunting the constant c" for the value of c (and the demise of the √15 guess).
 
 Where this leaves the closed-form hunt: the gastank recursion gives an exact polynomial-time evaluator — the problem is now *computationally* closed. A single closed-form expression in the base-2 sense is unlikely to exist for base 10 (the layered, budget-graded operator resists collapsing to a fixed-dimensional recurrence), but the constant c and the structure of the state family are both open, well-posed targets.
 
@@ -211,6 +211,18 @@ Four solver generations on full-plane f(N), cross-checked wherever two overlap (
 The BFS variants and the monotone DP are all O(area) = O(10^(2N/9)) — the DP just wins a ~100× vectorization constant, which bought exactly one extra decade (N=36) before the exponential wall. The tank solver's cost tracks its state count, ~N^3.3: polynomial versus exponential, which is the whole story. At N=36 it is ~250× faster than the DP; past N≈40 it is the only game in town.
 
 (Benchmarking exposed that `axis_bound` was a linear scan with a hard cap; it now uses the closed form — smallest x with ds(x) = N+1 is digit s followed by q nines where N+1 = 9q+s — verified against scans across bases.)
+
+## Hunting the constant c (and the death of √15)
+
+A serious attempt to pin the constant in `ratio ≈ c/√N`, using exact peak-line Q values to N = 989 (`digitsum_peakdata.json`, ~15M tank states, 3.6 GB) and a base-general tank solver (`digitsum_tanks_anybase.py`, validated against the base-2 closed form, the base-10 solver, and the monotone DP in bases 3–5).
+
+**√15 is refuted.** The peak-line sequence c_N = Q/constraint·√N rises to a **crest of 3.86931 at N ≈ 650, then descends with accelerating increments** (−1.7e−4, −2.5e−4, −2.9e−4 per 90 steps of N at 719/809/899/989). √15 = 3.87298 lies above every value the sequence ever attained; reaching it would require the sequence to reverse into a rise after four accelerating descents, which no correction model supports. The seductive early agreement (pair-fits through N=629 landed within 1.3e−5 of √15) was a genuine mirage caused by two correction terms crossing over.
+
+**What the correction structure actually is.** At least two competing terms: a geometric-per-decade rise (~ρ^q with ρ ≈ 0.91 — the signature of a subleading eigenvalue of the decade transfer map) that dominates for N ≲ 650, and a slow negative power-law tail (the CLT edge-correction family) that takes over beyond the crest. Because they fight at the 10⁻³ scale even at N ≈ 1000, extrapolation models disagree: the honest estimate is **c = 3.865 ± 0.004**. The same crest-then-descend shape appears in bases 3, 4, 5 (crests: 2.52798 at N=149, 2.74720 at N=197, 2.95829 at N=255) — the structure is universal; base 2 (exact c = 4/√π, approach from above) is the degenerate case with no visible crest.
+
+**Methodology lesson** (the reason this section can be trusted): every extrapolation model was first calibrated on base 2, where c = 4/√π is exact. Naive polynomial-in-1/N extrapolation recovers base-2's constant with error 2×10⁻² — hopelessly wrong — because the true corrections carry 1/√N terms; the calibrated two-power model recovers it to 9×10⁻⁵. Without the base-2 control, the base-10 fits (spread 3.847–3.897) would have been reported with false confidence.
+
+**The way to actually get c**: not extrapolation. The decade transfer map on normalized tank-state distributions should have a fixed point, with c a functional of it and ρ its subleading eigenvalue ratio — computing that spectrum directly from the flood recursion is the well-posed route, and it would deliver ρ ≈ 0.91 as a check.
 
 ## OEIS status
 
@@ -233,5 +245,7 @@ All in this directory. Each writes its output PNG(s) into cwd.
 | `digitsum_base2.py`         | (stdout) base-2 closed form Q(N)=C(2N+3,N) verified vs DP |
 | `digitsum_tanks.py`         | (stdout) gastank solver — exact Q(N) to N=630+ via hash-consed flood recursion |
 | `digitsum_bench.py`         | (stdout) four-way solver benchmark with cross-checks |
+| `digitsum_tanks_anybase.py` | base-general tank solver (validations in __main__)  |
+| `digitsum_c.py`             | (stdout) c-constant analysis over `digitsum_peakdata.json` |
 
 Run with `.venv-digitsum/bin/python digitsum_<name>.py`. The directed-reachability DP lives in `digitsum_lib.py` (`monotone_quadrant` / `monotone_reach_count`).
