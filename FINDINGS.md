@@ -130,7 +130,7 @@ Consequences:
 
 1. **Computation.** Reachability is one vectorized run-flood sweep per row (`monotone_quadrant` in `digitsum_lib.py`), ~100× faster than BFS. This is what made the decade-4 numbers (N up to 36, bbox ±19998, 3.8×10⁸ quadrant cells) feasible.
 2. **Theory.** The problem is *directed* site percolation on a deterministic self-similar set, not undirected percolation. Directed reachability composes over blocks: what happens inside a `10^k × 10^k` digit-block depends only on (a) the digit-sum budget consumed by the block's coordinate prefixes and (b) the pattern of reachable entry cells on its left and bottom edges. If those entry patterns fall into finitely many equivalence classes, the count follows a substitution system — f(N) as an entry in a product of fixed matrices, a closed form in the same sense that the Sierpiński count is 3^k. This is the rigorous version of the "recurrence indexed by ⌊N/9⌋ with a correction term" predicted below.
-3. **A provable target.** The lemma itself ("the allowed set has no reachable overhangs") is only verified empirically so far. Proving it — plausibly by induction on x + y along a row's digit-sum structure — would put the framework on solid ground.
+3. **A provable target.** The lemma itself ("the allowed set has no reachable overhangs") was verified empirically here, and later **proved** as a corollary of the reachability criterion (see `PROOF.md`): reachable ⟹ criterion ⟹ staircase-reachable.
 
 ## Why a closed form stays slippery
 
@@ -242,11 +242,13 @@ The scalar Wiener–Hopf warm-up (`digitsum_scalar_wh.py`) modeled reachability 
 
 > **Criterion.** In base b with threshold N, write x, y with k = ⌊N/(b−1)⌋+1 digits (most significant first) and set d₀ = (b−1)k − N,
 > `d_s = d₀ + Σ_{t≤s} (x_t + y_t − (b−1))`.
-> Then (x, y) in the quadrant is **reachable iff d_s ≤ 1 for every s < k and d_k ≤ 0**.
+> Then (x, y) in the quadrant is **reachable iff d_s ≤ 1 for every 1 ≤ s < k and d_k ≤ 0** (the start d₀ itself is not tested).
 >
 > Unwound: every digit-prefix pair must leave at least (b−1)·(digits remaining) − 1 of budget — the "+1" of slack is the weir — and the full digit sums must satisfy ds(x)+ds(y) ≤ N.
 
-Verification: exhaustive against monotone-DP reachability for base 10 (N = 9..29), base 3 (N = 3..15), base 5 (N = 5..19) — **zero mismatches**; the induced walk-DP count matches BFS f(N) for N ≤ 36 and the tank solver's exact Q(N) at N = 269, 449, 629, 809, 989 with **integer equality** (`digitsum_criterion.py`). Empirically this is the theorem of the whole problem; it subsumes the monotone lemma, the gastank recursion, and the island characterization in one prefix condition. (Proof still owed. The natural route: the criterion is precisely "every ancestor tank on the cell's descent path is wet," plus the census facts that wetness = d ≤ 1.)
+Verification: exhaustive against monotone-DP reachability for base 10 (N = 9..29), base 3 (N = 3..15), base 5 (N = 5..19) — **zero mismatches**; the induced walk-DP count matches BFS f(N) for N ≤ 36 and the tank solver's exact Q(N) at N = 269, 449, 629, 809, 989 with **integer equality** (`digitsum_criterion.py`).
+
+**PROVED — see `PROOF.md`.** Necessity: any path entering the cell's scale-m ancestor tank must cross a trailing-nines wall; entering from the left/below certifies the *neighbor's* wall (one digit cheaper via the borrow inequality ds(X) ≤ ds(X−1)+1), giving exactly the +1 slack. Sufficiency: an explicit L-path to the ancestor tank's corner (worst cells `(a−1)99…9` on the axis and `a + (c−1)99…9` on the climb, allowed exactly under the criterion bound), then recursion inside the tank at threshold N − a − c. The two "+1"s coincide — that is why the criterion is sharp. The monotone-staircase lemma follows as a corollary (reachable ⟹ criterion ⟹ staircase-reachable), closing the other open proof of the project.
 
 Consequences:
 

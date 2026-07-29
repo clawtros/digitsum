@@ -8,9 +8,10 @@ Then (x,y) in the quadrant is reachable from the origin iff
 every prefix pair leaves at least (b-1)*(digits remaining) - 1 of budget — the
 weir slack is the "+1".)
 
-Verified exhaustively against monotone-DP reachability for base 10 (N=9..29),
-base 3 (N=3..15), base 5 (N=5..19), and against exact tank-solver counts to
-N=989 (integer equality; see __main__). Subsumes the monotone lemma and the
+PROVED in PROOF.md (wall-certificate necessity + corner-staircase sufficiency),
+and verified exhaustively against monotone-DP reachability for base 10
+(N=9..29), base 3 (N=3..15), base 5 (N=5..19), and against exact tank-solver
+counts to N=989 (integer equality; see __main__). Subsumes the monotone lemma and the
 gastank recursion for counting purposes: Q(N) follows from a 1-D walk DP in
 O(k^2 b) time — microseconds where the tank solver needed minutes.
 
