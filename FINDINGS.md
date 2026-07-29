@@ -224,6 +224,8 @@ A serious attempt to pin the constant in `ratio ≈ c/√N`, using exact peak-li
 
 **The way to actually get c**: not extrapolation. The decade transfer map on normalized tank-state distributions should have a fixed point, with c a functional of it and ρ its subleading eigenvalue ratio — computing that spectrum directly from the flood recursion is the well-posed route, and it would deliver ρ ≈ 0.91 as a check.
 
+> **Superseded (same session):** the reachability criterion (final section) turned out to make the peak-line count an *exact* 1-D walk model; running it to k = 16,000 (N = 143,999) shows the descent continues far past the N = 989 data horizon. The true constant is **c = 3.84717(5)**, and the "3.865 ± 0.004" band was an extrapolation artifact. The power-law fits at 3.847 that were dismissed as degenerate were correct. √15 remains refuted, now by ~500σ.
+
 ## The spectral expedition
 
 First execution of that program (`digitsum_spectral.py`): instrument the flood recursion, extract the census of tank states in the top scales normalized as `(depth, d = 9k − K, front signatures)` — d is the tank's offset from the digit-sum mean; the top tank always has d = 1 on the peak line, and children step by `(i+j) − 9`, a centered walk. Three results:
@@ -233,6 +235,25 @@ First execution of that program (`digitsum_spectral.py`): instrument the flood r
 3. **The spectrum trends toward ρ but is truncation-limited.** The tank-count transfer matrix on the unambiguous states gives λ₁ → 95.2 (climbing toward the trivial 100 as the d-band widens) and λ₂/λ₁ = 0.577 → 0.777 → **0.860** as truncation depth grows — rising toward the observed ρ ≈ 0.91 but saturating at the depth our SHALLOW=6 instrumentation reaches, i.e. limited by data, not by the trend.
 
 Verdict: the spectral framework is viable and two of its three pillars are now *exact empirical facts* (fixed point, closure). The remaining work is real mathematics: instrument deeper (the band widens like √depth, so memory grows fast), and treat the diffusive d-walk properly — a Markov-additive process whose continuum spectrum is precisely the power-law correction family that fought the geometric term in the c hunt. The 24-classes-per-offset operator with a one-sided boundary at d = 1 is now a concrete, finitely-presented object; c and ρ are functionals of it.
+
+## The reachability criterion (the master theorem)
+
+The scalar Wiener–Hopf warm-up (`digitsum_scalar_wh.py`) modeled reachability as a walk staying below a wall — and its base-2 answer agreed with the exact 4/√π to 4×10⁻⁵, suspiciously well for an approximation. Testing whether the model is *literally the truth*:
+
+> **Criterion.** In base b with threshold N, write x, y with k = ⌊N/(b−1)⌋+1 digits (most significant first) and set d₀ = (b−1)k − N,
+> `d_s = d₀ + Σ_{t≤s} (x_t + y_t − (b−1))`.
+> Then (x, y) in the quadrant is **reachable iff d_s ≤ 1 for every s < k and d_k ≤ 0**.
+>
+> Unwound: every digit-prefix pair must leave at least (b−1)·(digits remaining) − 1 of budget — the "+1" of slack is the weir — and the full digit sums must satisfy ds(x)+ds(y) ≤ N.
+
+Verification: exhaustive against monotone-DP reachability for base 10 (N = 9..29), base 3 (N = 3..15), base 5 (N = 5..19) — **zero mismatches**; the induced walk-DP count matches BFS f(N) for N ≤ 36 and the tank solver's exact Q(N) at N = 269, 449, 629, 809, 989 with **integer equality** (`digitsum_criterion.py`). Empirically this is the theorem of the whole problem; it subsumes the monotone lemma, the gastank recursion, and the island characterization in one prefix condition. (Proof still owed. The natural route: the criterion is precisely "every ancestor tank on the cell's descent path is wet," plus the census facts that wetness = d ≤ 1.)
+
+Consequences:
+
+1. **Counting is closed.** Q(N) is a 1-D lattice-walk count: a DP over the offset d in O(k²b) time — microseconds where the tank solver needed minutes and BFS needed the age of the universe. The tank/DAG machinery remains the *explanatory* structure (and computes the full 2-D geometry, which the criterion does not), but counting needs none of it.
+2. **c corrected.** The walk DP evaluated at k = 16,000 (N = 143,999), calibrated on base 2 (recovers 4/√π to 10⁻⁶): **c = 3.84717(5)** on the base-10 peak line. The crest at 3.8693 and the two-term correction structure are finite-k features of this same exact model — no mystery left in the data, only in the constant.
+3. **The closed-form question reopens, properly posed.** Q(9k−1)/100^k is the survival probability of a tent-walk (sum of two uniform digits, centered) below a one-sided wall — a classical kernel-method / Wiener–Hopf object. Its generating function is algebraic-over-rational in the standard way, and c is expressible through the factorization of the tent kernel 1 − z·((1−u¹⁰)/(10(1−u)))²u⁻⁹ — very plausibly an explicit (if unlovely) algebraic-analytic expression. That, not √15, is what c actually is.
+4. The 24-class transfer structure from the spectral expedition is real but *count-irrelevant*: the classes describe which cells within tanks flood (the 2-D geometry), while the census weights conspire so that per-cell reachability depends only on the scalar walk. Why that conspiracy happens is now the most interesting open question in the project.
 
 ## OEIS status
 
@@ -258,5 +279,7 @@ All in this directory. Each writes its output PNG(s) into cwd.
 | `digitsum_tanks_anybase.py` | base-general tank solver (validations in __main__)  |
 | `digitsum_c.py`             | (stdout) c-constant analysis over `digitsum_peakdata.json` |
 | `digitsum_spectral.py`      | (stdout) decade-map census, closure test, transfer-matrix spectrum |
+| `digitsum_scalar_wh.py`     | (stdout) scalar Wiener–Hopf walk model (the warm-up that found the criterion) |
+| `digitsum_criterion.py`     | (stdout) THE reachability criterion: validation + exact walk-DP counts + c |
 
 Run with `.venv-digitsum/bin/python digitsum_<name>.py`. The directed-reachability DP lives in `digitsum_lib.py` (`monotone_quadrant` / `monotone_reach_count`).
