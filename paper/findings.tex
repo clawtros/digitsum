@@ -209,19 +209,6 @@ islands are submerged basins sealed off by ridges that never dip. All four terms
 appear together in a single real strip of the $N{=}19$ plane in
 Figure~\ref{fig:glossary}.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{digitsum_glossary.png}
-\caption{The glossary in one strip: cells $x\in[250,320)$, $y\in[0,20)$ at
-$N=19$. Scale-1 tanks with budgets $K=19-\ds(a)-\ds(b)$ show their triangular
-silhouettes (blue: flooded; slate: allowed but dry; dark: forbidden). Weirs
-(green) narrow $4,3,2,1$ and then close as budgets shrink toward the wall at
-$x=299$ (red), whose column never dips below the waterline --- so tank $(30,0)$,
-despite its generous $K=16$, stays dry: the canonical island containing
-$(300,0)$. Orange marks the wetting front on each tank's exit edge.}
-\label{fig:glossary}
-\end{figure}
-
 Flooding tanks recursively --- passing fronts over weirs, with fronts hash-consed
 as interned $10$-tuples of child fronts (a DAG; never expanded) --- gives an exact
 solver whose distinct-state count grows only polynomially (${\sim}N^{3.3}$).
@@ -247,6 +234,19 @@ polynomial in $N$. Per residue $N\bmod 9$, the sequence $Q$ is neither C-finite
 (order $\le 13$ excluded) nor holonomic within order $\le 6$, degree $\le 8$ ---
 but the \emph{allowed} count fails identically, so base 10 lacks base 2's
 central-binomial collapse rather than being intrinsically wilder.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{digitsum_glossary.png}
+\caption{The glossary in one strip: cells $x\in[250,320)$, $y\in[0,20)$ at
+$N=19$. Scale-1 tanks with budgets $K=19-\ds(a)-\ds(b)$ show their triangular
+silhouettes (blue: flooded; slate: allowed but dry; dark: forbidden). Weirs
+(green) narrow $4,3,2,1$ and then close as budgets shrink toward the wall at
+$x=299$ (red), whose column never dips below the waterline --- so tank $(30,0)$,
+despite its generous $K=16$, stays dry: the canonical island containing
+$(300,0)$. Orange marks the wetting front on each tank's exit edge.}
+\label{fig:glossary}
+\end{figure}
 
 \section{The constant \texorpdfstring{$c$}{c}: two false summits}\label{sec:c}
 
