@@ -1,0 +1,272 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm}
+\usepackage{newtxtext,newtxmath}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\ds}{\mathsf{s}}
+
+\title{Digit-Sum Reachability on the Lattice:\\
+An Experimental Expedition from Brute Force to a Two-Line Criterion}
+\author{Adam Benzan\thanks{Joint exploration with Claude (Anthropic). Scripts,
+exact datasets, and the companion proof paper live in the project repository.}}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Starting from $(0,0)$, a walker moves on $\mathbb{Z}^2$ through cells satisfying
+$\ds(|x|)+\ds(|y|)\le N$, where $\ds$ is the digit sum (base $10$ unless noted).
+We chronicle an experimental program on the reachable set: exact counts and the
+fractal geometry of the region; a Cantor-like staircase in $N$ with cliffs at
+multiples of $9$; an exact closed form in base $2$,
+$Q(N)=\binom{2N+3}{N}$; a carry-free self-similar (``gastank'') decomposition
+giving a polynomial-time exact solver; the asymptotic law
+$\mathrm{reachable}/\mathrm{allowed}\sim c/\sqrt{N}$ with $c=3.84717(5)$
+(refuting a tempting $\sqrt{15}$); and finally an exact two-line reachability
+criterion, proved in a companion paper, which subsumes every structure met along
+the way and reduces all counting to a one-dimensional walk recursion. We keep the
+narrative in expedition order, including two instructive false summits.
+\end{abstract}
+
+\section{The problem}
+
+A cell $(x,y)\in\mathbb{Z}^2$ is \emph{allowed} iff $\ds(|x|)+\ds(|y|)\le N$;
+the \emph{reachable set} is the $4$-connected component of the origin within the
+allowed set. Write $f(N)$ for its size and $Q(N)$ for the size of its closed-quadrant
+part. The canonical instance is $N=19$:
+\[
+f(19)=102{,}485,\qquad \text{bounding box } [-298,298]^2 ,
+\]
+the box ending exactly at the first \emph{axis cliff}: $\ds(299)=20$ makes the
+entire column $|x|=299$ forbidden. The region is $4$-fold symmetric, diamond-like at
+large scale, pierced by rectangular ``death zones'' and nested self-similar
+triangular voids.
+
+\subsection*{Allowed versus reachable}
+Each row $y$ of the allowed set is the one-dimensional set
+$\{x:\ds(|x|)\le N-\ds(|y|)\}$, so the allowed set factors through a family of
+$1$-D threshold sets. Counting allowed cells in the bounding box at $N=19$ gives
+$166{,}973$, versus $102{,}485$ reachable: a gap of $64{,}488$ cells
+($38.6\%$) that satisfy the constraint but are cut off behind carry cliffs ---
+\emph{islands}. The canonical island: $(300,0)$ is allowed ($\ds=3$) but hidden
+behind the forbidden column $x=299$.
+
+\section{The staircase in \texorpdfstring{$N$}{N}}
+
+Exact counts as $N$ grows show a descending, Cantor-like pattern in the ratio
+$f(N)/\text{allowed-in-box}$, with cliffs exactly at $N\in\{9,18,27,36\}$ --- the
+thresholds at which the box first jumps a decade.
+
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+$N$ & $f(N)$ & allowed (box) & ratio & box \\
+\midrule
+ 8 & 145 & 145 & 1.0000 & $\pm 8$ \\
+ 9 & 505 & 649 & 0.7781 & $\pm 18$ \\
+17 & 14{,}785 & 18{,}265 & 0.8095 & $\pm 98$ \\
+18 & 47{,}905 & 73{,}885 & 0.6484 & $\pm 198$ \\
+19 & 102{,}485 & 166{,}973 & 0.6138 & $\pm 298$ \\
+26 & 1{,}309{,}537 & 1{,}885{,}501 & 0.6945 & $\pm 998$ \\
+27 & 4{,}216{,}357 & 7{,}552{,}009 & 0.5583 & $\pm 1998$ \\
+35 & 117{,}109{,}345 & 190{,}327{,}945 & 0.6153 & $\pm 9998$ \\
+36 & 377{,}329{,}873 & 761{,}526{,}445 & 0.4955 & $\pm 19998$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Within each decade the topology is fixed and holes fill in monotonically; each new
+decade adds an outer, rescaled copy of the previous decade's pattern. The ratio
+minimum falls two steps \emph{after} each cliff ($N=11,20,29$), not at it.
+
+\section{The monotone lemma}
+
+A BFS-depth experiment found \emph{detour} $:=$ geodesic $-\;(|x|+|y|)$ to vanish
+on every reachable cell: whatever is reachable at all is reachable by a monotone
+staircase. Equivalently, in the quadrant,
+\[
+R(x,y)=\text{allowed}(x,y)\wedge\bigl(R(x{-}1,y)\vee R(x,y{-}1)\bigr)
+\]
+reproduces full undirected reachability. Verified for $N\le 22$ (base 10) and for
+bases $2\text{--}5$; later \emph{proved} as a corollary of the criterion of
+\S\ref{sec:criterion}. Connectivity failures are always total (islands), never
+partial (no cell requires a detour). Practically, the lemma converts BFS into a
+vectorized row sweep, ${\sim}100\times$ faster --- the workhorse for everything
+below.
+
+\section{Base 2: an exact closed form}\label{sec:base2}
+
+In base $2$ the quadrant count is a single binomial coefficient:
+\[
+Q_2(N)=\binom{2N+3}{N},\qquad
+f_2(N)=4\binom{2N+3}{N}-2^{N+3}+5 ,
+\]
+verified for $N\le 15$ with the $N=15$ value \emph{predicted before} a
+$4.3\times10^9$-cell sweep confirmed it. The allowed-set side is classical,
+$\bigl(4^{N+1}-\binom{2N+2}{N+1}\bigr)/2$, so the island count is closed-form by
+subtraction, and
+\[
+\frac{Q_2(N)}{\text{allowed}}\;\longrightarrow\;\frac{4}{\sqrt{\pi N}} .
+\]
+The ratio tends to \emph{zero}: there is no finite asymptotic density. $Q_2$ is
+OEIS A002054 (ballot numbers), pointing to a lattice-path bijection; the base-10
+sequence $f(N)$ is not in OEIS.
+
+\section{Gastanks: the carry-free decomposition}\label{sec:tanks}
+
+\begin{definition}[Tank, wall, weir, wetting front]
+A \emph{tank} $T_k(K)$ is a block $[0,10^k)^2$ in local coordinates with budget
+$K$: local cell $(u,v)$ allowed iff $\ds(u)+\ds(v)\le K$. Since digit sums are
+carry-free inside a block, the child at digit position $(i,j)$ is exactly
+$T_{k-1}(K-i-j)$: budgets step down by one per digit, with no corrections, ever.
+A \emph{wall} is the trailing-nines seam between sibling tanks (digit-sum cost
+$9s$ at sibling scale $s$); carries \emph{are} walls. A \emph{weir} is the
+passable part of a wall, $\{v:\ds(v)\le K_{\mathrm{left}}-9s\}$ --- itself a 1-D
+threshold set one scale down. A \emph{wetting front} is the set of edge cells
+through which flow passes; fronts are Cantor-dust-like with up to ${\sim}9^{k-1}$
+intervals.
+\end{definition}
+
+Equivalently, in \emph{terrain} coordinates (elevation $=\ds(x)+\ds(y)$,
+waterline $=N$): walls are ridges, weirs are notches dipping below the waterline,
+islands are submerged basins sealed off by ridges that never dip.
+
+Flooding tanks recursively --- passing fronts over weirs, with fronts hash-consed
+as interned $10$-tuples of child fronts (a DAG; never expanded) --- gives an exact
+solver whose distinct-state count grows only polynomially (${\sim}N^{3.3}$).
+Benchmarks (cold start, cross-checked outputs):
+
+\begin{center}
+\begin{tabular}{rrrrrl}
+\toprule
+$N$ & BFS (set) & BFS (grid) & monotone DP & tanks & $f(N)$ \\
+\midrule
+26 & 1.31 s & 1.19 s & 0.009 s & 0.002 s & $1.3\times10^{6}$ \\
+28 & --- & 8.55 s & 0.053 s & 0.003 s & $9.0\times10^{6}$ \\
+36 & --- & --- & 1.98 s & 0.008 s & $3.8\times10^{8}$ \\
+90 & --- & --- & --- & 0.13 s & $2.5\times10^{20}$ \\
+360 & --- & --- & --- & 16.2 s & ${\sim}10^{89}$ \\
+630 & --- & --- & --- & 144 s & ${\sim}10^{140}$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The first three methods are all $O(\text{area})=O(10^{2N/9})$; the tank solver is
+polynomial in $N$. Per residue $N\bmod 9$, the sequence $Q$ is neither C-finite
+(order $\le 13$ excluded) nor holonomic within order $\le 6$, degree $\le 8$ ---
+but the \emph{allowed} count fails identically, so base 10 lacks base 2's
+central-binomial collapse rather than being intrinsically wilder.
+
+\section{The constant \texorpdfstring{$c$}{c}: two false summits}\label{sec:c}
+
+On the \emph{peak line} $N\equiv 8 \pmod 9$ (box $=$ bounding box), set
+$c_N=\sqrt{N}\cdot\mathrm{reachable}/\mathrm{allowed}$.
+
+\emph{False summit 1: $\sqrt{15}$.} Pair extrapolations through $N=629$ landed
+within $1.3\times10^{-5}$ of $\sqrt{15}=3.87298$. But exact data to $N=989$
+(tank solver, $15$M states) showed $c_N$ \emph{cresting} at $3.86931$ near
+$N\approx650$ and then descending with accelerating increments ---
+$\sqrt{15}$ exceeds every value ever attained. The agreement was a crossing
+artifact of two competing correction terms.
+
+\emph{False summit 2: $c=3.865\pm0.004$.} With data ending at $N=989$, model
+fits (calibrated on base 2, where naive $1/N$-polynomial extrapolation misses
+$4/\sqrt{\pi}$ by $2\times10^{-2}$) gave $3.865(4)$. The criterion of
+\S\ref{sec:criterion} later allowed evaluation at $k=16{,}000$
+($N=143{,}999$): the descent continues far past the old horizon, and
+\[
+c \;=\; 3.84717(5)
+\]
+--- precisely where earlier ``degenerate'' power-law fits had pointed. The crest
+and both correction families (a geometric-per-decade term with ratio
+${\sim}0.91$ and a slow power tail) are finite-$k$ features of one exact model.
+Bases $3,4,5$ show the same crest-then-descend shape; base 2
+($c_2=4/\sqrt{\pi}$, approach from above) is the degenerate case.
+
+\section{The spectral expedition}\label{sec:spectral}
+
+Instrumenting the flood recursion and normalizing tank states as
+$(\text{depth},\, d,\ \text{front classes})$ with $d=9k-K$ (offset of the
+waterline from the tank's mean elevation) yields, empirically:
+
+\begin{enumerate}
+\item \textbf{Exact fixed point.} The shallow census is \emph{identical} ---
+integer-for-integer --- across all peak-line $N$ tested ($116$--$404$), at every
+instrumented depth. All $N$-dependence lives in the deepening diffusive interior.
+\item \textbf{Closure.} Transition profiles are well-defined functions of
+truncated front signatures ($577/651$ classes unambiguous; failures only at
+deeply submerged $d\le-35$); classes per offset saturate at $24$. The active band
+is one-sided: no active tank has $d>1$.
+\item \textbf{Spectrum.} The truncated transfer matrix gives $\lambda_1\to95.2$
+(toward the trivial $100$) and $\lambda_2/\lambda_1$ rising
+$0.58\to0.78\to0.86$ with truncation depth, toward the observed per-decade
+correction ratio ${\sim}0.91$ --- data-limited, not trend-limited.
+\end{enumerate}
+
+The $d$-walk steps by $(i+j)-9$ per scale: a Markov-additive process whose
+continuum spectrum is the power-law correction family of \S\ref{sec:c}.
+
+\section{The reachability criterion}\label{sec:criterion}
+
+A scalar Wiener--Hopf ``warm-up'' --- modelling reachability as the $d$-walk
+surviving below the census barrier $d\le1$ --- reproduced base 2's constant to
+$4\times10^{-5}$ with no fitted parameters. Testing whether the model is
+\emph{literally} true:
+
+\begin{theorem}[Reachability criterion; proof in the companion paper]
+In base $b$, threshold $N$, $k=\lfloor N/(b{-}1)\rfloor+1$: a quadrant cell
+$(x,y)$ is reachable iff every proper digit-prefix pair
+\emph{(lengths $1\le s<k$)} satisfies
+\[
+\ds\bigl(x\langle s\rangle\bigr)+\ds\bigl(y\langle s\rangle\bigr)\;\le\;
+N-(b{-}1)(k{-}s)+1 ,
+\]
+and $\ds(x)+\ds(y)\le N$.
+\end{theorem}
+
+Zero mismatches against exhaustive reachability across bases $3,5,10$; integer
+equality with the tank solver's $Q(N)$ up to $N=989$. The proof is elementary:
+\emph{necessity} because any entry into a cell's scale-$m$ ancestor tank crosses
+a trailing-nines wall, entries from the left/below certifying the
+\emph{neighbor's} wall --- one digit cheaper via $\ds(X)\le\ds(X{-}1)+1$, whence
+the $+1$ slack; \emph{sufficiency} by an explicit L-path to the ancestor tank's
+corner --- worst cells $(a{-}1)\underline{9\cdots9}$ and
+$a+(c{-}1)\underline{9\cdots9}$, allowed exactly under the criterion bound ---
+followed by recursion inside the tank at threshold $N-a-c$. The two $+1$'s
+coincide; the criterion is sharp. The monotone lemma follows as a corollary.
+
+Consequences: counting reduces to a $1$-D walk recursion ($O(k^2 b)$ ---
+microseconds at any $N$); the constant $c$ is a one-boundary survival constant of
+the centered tent walk, i.e.\ a kernel-method/Wiener--Hopf object with an
+explicit (if unlovely) analytic characterization; and the $24$-class front
+dynamics of \S\ref{sec:spectral}, while real as $2$-D geometry, is
+count-irrelevant --- reachability depends only on ancestor budgets.
+
+\section{Open problems}
+
+\begin{enumerate}
+\item Extract $c_b$ in closed analytic form from the Wiener--Hopf factorization
+of the tent kernel; verify $c_{10}=3.84717(5)$ and the per-decade ratio
+${\sim}0.91$ from the factorization's subleading singularity.
+\item A reflection-style bijection proving $Q_2(N)=\binom{2N+3}{N}$ from the
+criterion's interleaved-bit walk.
+\item The full two-dimensional geometry (which cells flood \emph{within} a tank)
+retains the $24$-class transfer structure; characterize its fixed point.
+\item Submit $f(N)$ (and the peak-line $Q$ data) to OEIS.
+\end{enumerate}
+
+\end{document}

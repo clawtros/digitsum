@@ -1,5 +1,9 @@
 # Digit-sum reachability — findings
 
+> Academic-style PDFs of this material live in `paper/`: `criterion.pdf` (the
+> proof paper, from PROOF.md) and `findings.pdf` (this document restructured as
+> an expedition report). Rebuild with `tectonic paper/<name>.tex`.
+
 ## The problem
 
 Starting from `(0, 0)` on the integer lattice, 4-connected moves (up/down/left/right). A cell `(x, y)` is permitted iff

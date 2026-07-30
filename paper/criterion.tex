@@ -1,0 +1,269 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm}
+\usepackage{newtxtext,newtxmath}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\ds}{\mathsf{s}}
+\newcommand{\pref}[2]{#1\langle #2\rangle}
+
+\title{An Exact Reachability Criterion for\\ Digit-Sum--Bounded Lattice Walks}
+\author{Adam Benzan\thanks{Joint exploration with Claude (Anthropic). All results
+verified computationally against exhaustive search; see the repository scripts.}}
+\date{July 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Fix a base $b\ge 2$ and a threshold $N$, and call a lattice cell $(x,y)\in\mathbb{Z}^2$
+\emph{allowed} if $\ds(|x|)+\ds(|y|)\le N$, where $\ds$ denotes the base-$b$ digit sum.
+We characterize the set of cells reachable from the origin by $4$-connected paths
+through allowed cells: $(x,y)$ is reachable if and only if every proper digit-prefix
+pair of $(|x|,|y|)$ satisfies an explicit budget inequality with exactly one unit of
+slack, together with allowedness of the cell itself. The proof is elementary and
+constructive. Corollaries: reachability coincides with monotone (staircase)
+reachability; the reachable-cell count is computed exactly by a one-dimensional
+walk recursion in time polynomial in $\log N$-many digits; and the asymptotic
+density of the reachable set within the allowed set is governed by classical
+one-boundary fluctuation theory.
+\end{abstract}
+
+\section{Setting and statement}
+
+Fix a base $b\ge 2$ and write $B=b-1$. Fix a threshold $N\ge 1$ and let
+$k=\lfloor N/B\rfloor+1$, so that
+\begin{equation}\label{eq:krange}
+Bk>N\ \ge\ B(k-1).
+\end{equation}
+For an integer $v\ge 0$ let $\ds(v)$ be its base-$b$ digit sum. A cell
+$(x,y)\in\mathbb{Z}^2$ is \emph{allowed} if $\ds(|x|)+\ds(|y|)\le N$, and
+\emph{reachable} if there is a path from the origin to $(x,y)$, moving one unit at a
+time in the four axial directions, all of whose cells are allowed. (The origin is
+allowed.)
+
+For $0\le x<b^k$ write the digits of $x$ most significant first,
+$x=x_1x_2\cdots x_k$ (leading zeros permitted), and for $0\le s\le k$ let
+$\pref{x}{s}$ denote the integer with digits $x_1\cdots x_s$. For a pair $(x,y)$ in
+the quadrant define the \emph{prefix sums}
+\[
+P_s \;=\; \ds(\pref{x}{s})+\ds(\pref{y}{s}), \qquad s=0,1,\dots,k .
+\]
+
+\begin{theorem}[Reachability criterion]\label{thm:main}
+Let $0\le x,y<b^k$. Then $(x,y)$ is reachable if and only if
+\begin{enumerate}
+\item[\textup{(i)}] $P_s \;\le\; N-B(k-s)+1$ \quad for every $s$ with $1\le s<k$, and
+\item[\textup{(ii)}] $P_k=\ds(x)+\ds(y)\;\le\; N$.
+\end{enumerate}
+Moreover every reachable cell of the closed quadrant satisfies $x,y<b^k$, and the
+full-plane reachable set is the image of the quadrant one under the four
+reflections $(x,y)\mapsto(\pm x,\pm y)$.
+\end{theorem}
+
+The empty prefix is excluded from (i): $P_0=0$, while the bound $N-Bk+1$ may be
+negative by \eqref{eq:krange}.
+
+Equivalently, in walk form: put $d_0=Bk-N$ and
+$d_s=d_0+\sum_{t\le s}(x_t+y_t-B)$. Then (i)--(ii) read
+\[
+d_s\le 1\ (1\le s<k), \qquad d_k\le 0 .
+\]
+
+We use three elementary facts about digit sums.
+
+\begin{lemma}\label{lem:digits}
+For all integers $X\ge 1$ and $m\ge 0$:
+\begin{enumerate}
+\item[\textup{(D1)}] $\ds(X)\le \ds(X-1)+1$; more precisely
+$\ds(X)=\ds(X-1)+1-Bt$ when $X$ ends in exactly $t$ zeros.
+\item[\textup{(D2)}] $\ds(X\cdot b^m-1)=\ds(X-1)+Bm$.
+\item[\textup{(D3)}] for $m\ge 1$ and $1\le a<b$:\ \
+$\max\{\ds(t): 0\le t\le a\cdot b^m\}=(a-1)+Bm$, attained at $t=a\cdot b^m-1$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(D1): incrementing either increases the last digit by one, or turns a digit-string
+suffix $d\,B\cdots B$ ($t$ trailing copies of $B$) into $(d{+}1)\,0\cdots 0$.
+(D2): $X b^m-1=(X-1)b^m+(b^m-1)$, whose digits are those of $X-1$ followed by $m$
+copies of $B$. (D3): write $t=a'b^m+r$ with $0\le r<b^m$. If $t<ab^m$ then
+$a'\le a-1$ (a single digit) and $\ds(t)=a'+\ds(r)\le (a-1)+Bm$, with equality at
+$a'=a-1$, $r=b^m-1$; the endpoint $t=ab^m$ has $\ds(t)=a\le(a-1)+Bm$ since
+$Bm\ge1$.
+\end{proof}
+
+\section{Reduction to the quadrant}
+
+\begin{proposition}\label{prop:fold}
+The folding map $(x,y)\mapsto(|x|,|y|)$ sends allowed cells to allowed cells and
+neighbors to neighbors or equal cells. Consequently the reachable set of the plane
+is the fourfold reflection of the reachable set of the quadrant, and it suffices to
+prove Theorem~\ref{thm:main} for paths confined to the quadrant.
+\end{proposition}
+
+\begin{proof}
+Allowedness depends only on $(|x|,|y|)$. If $c,c'$ are neighbors then their images
+differ by at most one unit in one coordinate.
+\end{proof}
+
+\begin{proposition}\label{prop:box}
+Every reachable cell of the quadrant has $x,y<b^k$.
+\end{proposition}
+
+\begin{proof}
+Let $w$ be the least integer with $\ds(w)=N+1$; explicitly $w=(s+1)b^{q}-1$ where
+$N+1=Bq+s$, $1\le s\le B$, so $w<b^{k}$. Every cell of the column $x=w$ has
+$\ds(x)+\ds(y)\ge N+1$ and is forbidden; a quadrant path from the origin to any
+$x>w$ would have to occupy that column. Hence reachable cells have $x\le w-1<b^k$,
+and likewise for $y$.
+\end{proof}
+
+\section{Necessity: wall certificates}
+
+\begin{lemma}[Necessity]\label{lem:nec}
+If $(x,y)$ is reachable then \textup{(i)} and \textup{(ii)} hold.
+\end{lemma}
+
+\begin{proof}
+(ii) is allowedness of the endpoint. For (i), fix $1\le s<k$ and let $m=k-s$.
+Partition the quadrant into \emph{tanks} of scale $m$: tank $(A,C)$ is the square
+$[A b^m,(A{+}1)b^m)\times[C b^m,(C{+}1)b^m)$. Let $T=(X,Y)$ with $X=\pref{x}{s}$,
+$Y=\pref{y}{s}$ be the tank containing $(x,y)$.
+
+If $(X,Y)=(0,0)$ then $P_s=0\le N-Bm+1$ by \eqref{eq:krange}. Otherwise the origin
+lies outside $T$, so a reaching path $\pi$ has a first step entering $T$: consecutive
+cells $c\notin T$, $c'\in T$. Note that any cell $(u,v)$ with $v$ in tank row $Y$ has
+$\ds(v)\ge\ds(Y)$, since the digits of $v$ are those of $Y$ followed by a suffix.
+Four cases.
+
+\emph{From the left} ($c$ in tank $(X{-}1,Y)$, so $X\ge1$): then
+$c=(Xb^m-1,\,y^*)$ with $y^*$ in tank row $Y$. By (D2),
+$\ds(Xb^m-1)=\ds(X{-}1)+Bm$, so allowedness of $c$ gives
+$\ds(X{-}1)+\ds(Y)\le N-Bm$, and (D1) yields
+\[
+P_s=\ds(X)+\ds(Y)\;\le\;\ds(X-1)+1+\ds(Y)\;\le\;N-Bm+1 .
+\]
+
+\emph{From below}: symmetric, using the top (all-$B$) wall row of tank
+$(X,Y{-}1)$: $P_s\le N-Bm+1$.
+
+\emph{From the right} ($c$ in tank $(X{+}1,Y)$): the \emph{entered} cell lies in
+the rightmost column of $T$ itself: $c'=((X{+}1)b^m-1,\,y^*)$, whose $x$-digit sum
+is $\ds(X)+Bm$ by (D2). Allowedness of $c'$ gives $P_s\le N-Bm$ directly.
+
+\emph{From above}: symmetric: $P_s\le N-Bm$.
+
+In all cases (i) holds at $s$.
+\end{proof}
+
+\begin{remark}
+The unit of slack in (i) is precisely the borrow in (D1): entries from the left or
+below certify the \emph{neighbor's} wall, which is one digit cheaper than the
+target tank's own.
+\end{remark}
+
+\section{Sufficiency: the corner staircase}
+
+\begin{lemma}[Sufficiency]\label{lem:suf}
+For every threshold $M\ge 0$ and every $j\ge 1$: if $0\le x,y<b^j$ satisfy
+\textup{(i)}--\textup{(ii)} with $(j,M)$ in place of $(k,N)$, then there is a
+monotone staircase (unit steps $+x$ and $+y$ only) of allowed cells from $(0,0)$
+to $(x,y)$.
+\end{lemma}
+
+\begin{proof}
+Induction on $j$. For $j=1$, (ii) reads $x+y\le M$ and the path
+$(0,0)\to(x,0)\to(x,y)$ has all digit sums $\le x+y$.
+
+Let $j\ge2$, and let $a=x_1$, $c=y_1$ be the leading digits, $x',y'$ the
+$(j{-}1)$-digit remainders. Condition (i) at $s=1$ reads
+\begin{equation}\label{eq:star}
+a+c\;\le\;M-B(j-1)+1 . \tag{$\star$}
+\end{equation}
+
+\emph{Leg 1: to the corner of tank $(a,c)$.} Take the L-path
+$(0,0)\to(a b^{j-1},0)\to(a b^{j-1},c\, b^{j-1})$. On the axis run, by (D3) every
+cell $(t,0)$ with $t\le ab^{j-1}$ has digit sum at most $(a-1)+B(j-1)\le M$ by
+\eqref{eq:star} (using $c\ge0$). On the column climb, every cell
+$(a b^{j-1},u)$ with $u\le c\,b^{j-1}$ has digit sum at most
+$a+(c-1)+B(j-1)\le M$, which is exactly \eqref{eq:star}. (If $a=0$ or $c=0$ the
+corresponding leg is empty and the bounds only improve.)
+
+\emph{Leg 2: inside the tank.} The tank $(a,c)$, entered at its bottom-left corner,
+is a copy of the same problem with $j-1$ digit positions and threshold
+$M'=M-a-c$: a local cell $(u,v)$ is allowed iff $\ds(u)+\ds(v)\le M'$. For
+$2\le s\le j$ put $s'=s-1$; then
+\[
+P_s\le M-B(j-s)+1
+\iff
+P'_{s'}\le M'-B\bigl((j{-}1)-s'\bigr)+1,
+\]
+where $P'$ are the prefix sums of $(x',y')$, and (ii) becomes
+$\ds(x')+\ds(y')\le M'$. Thus $(x',y')$ satisfies the $(j{-}1)$-digit criterion at
+threshold $M'$, and the induction hypothesis provides a monotone allowed staircase
+from the corner to it; translating by $(a b^{j-1},c\,b^{j-1})$ adds exactly $a+c$
+to every digit sum, preserving global allowedness.
+
+Concatenating the legs completes the induction.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+Propositions~\ref{prop:fold} and \ref{prop:box} reduce to the quadrant with
+$x,y<b^k$; Lemma~\ref{lem:nec} gives necessity; Lemma~\ref{lem:suf} with
+$(j,M)=(k,N)$ gives sufficiency (a staircase is in particular a path).
+\end{proof}
+
+\begin{remark}[Sharpness]
+Necessity produces the bound $N-Bm+1$ via the borrow in (D1); sufficiency consumes
+the same bound in the column climb of the L-path, whose worst cell
+$a\,b^{j-1}+(c\,b^{j-1}-1)$ has digit sum $a+(c-1)+B(j-1)$. The two units of slack
+coincide, which is why the criterion is exact.
+\end{remark}
+
+\section{Corollaries}
+
+\begin{corollary}[Monotone-staircase lemma]
+A cell is reachable iff it is reachable by a monotone staircase. In particular
+undirected reachability, directed (right/up) reachability, and the criterion
+coincide.
+\end{corollary}
+
+\begin{corollary}[Exact counting]\label{cor:count}
+Let $w(\sigma)=\#\{(i,j)\in[0,B]^2 : i+j-B=\sigma\}$ be the tent weights. Then the
+number $Q(N)$ of reachable quadrant cells equals the total weight of length-$k$
+walks $d_0\to d_k$ with steps weighted by $w$, barrier $d_s\le 1$ for $1\le s<k$,
+and endpoint $d_k\le 0$, where $d_0=Bk-N$. This is a one-dimensional dynamic
+program over $O(Bk)$ states per step; the full-plane count is
+$f(N)=4\,Q(N)-4\,w_0+1$ with $w_0$ the least integer of digit sum $N+1$.
+\end{corollary}
+
+\begin{corollary}[Asymptotics]
+On the peak line $N\equiv B-1 \pmod B$ one has $d_0=1$, and
+$Q(N)\big/b^{2k}$ is the survival probability of the centered tent walk below a
+one-sided barrier, with endpoint constraint. By one-boundary fluctuation theory
+(Wiener--Hopf factorization of the tent kernel), the reachable fraction of the
+allowed set decays as $c_b/\sqrt{N}$. In base $2$ the criterion yields
+$Q(N)=\binom{2N+3}{N}$ empirically and $c_2=4/\sqrt{\pi}$ exactly; in base $10$,
+numerically $c_{10}=3.84717(5)$.
+\end{corollary}
+
+\begin{remark}
+All statements were additionally verified computationally: the criterion against
+exhaustive breadth-first search for bases $3,5,10$ over their feasible ranges, and
+Corollary~\ref{cor:count} against independent solvers up to $N=989$ in base 10
+(integer equality).
+\end{remark}
+
+\end{document}
