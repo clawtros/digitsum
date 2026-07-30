@@ -249,14 +249,25 @@ program over $O(Bk)$ states per step; the full-plane count is
 $f(N)=4\,Q(N)-4\,w_0+1$ with $w_0$ the least integer of digit sum $N+1$.
 \end{corollary}
 
-\begin{corollary}[Asymptotics]
+\begin{corollary}[Asymptotics]\label{cor:asym}
 On the peak line $N\equiv B-1 \pmod B$ one has $d_0=1$, and
-$Q(N)\big/b^{2k}$ is the survival probability of the centered tent walk below a
-one-sided barrier, with endpoint constraint. By one-boundary fluctuation theory
-(Wiener--Hopf factorization of the tent kernel), the reachable fraction of the
-allowed set decays as $c_b/\sqrt{N}$. In base $2$ the criterion yields
-$Q(N)=\binom{2N+3}{N}$ empirically and $c_2=4/\sqrt{\pi}$ exactly; in base $10$,
-numerically $c_{10}=3.84717(5)$.
+$Q(N)\big/b^{2k}$ is the probability that the reflected tent walk stays
+nonnegative for $k$ steps and ends $\ge 1$. By the Sparre Andersen identity and
+the symmetry $\Pr(S_n\ge0)=\bigl(1+p_n\bigr)/2$ with $p_n=\Pr(S_n=0)$, the
+reachable fraction of the allowed set decays as $c_b/\sqrt{N}$ with
+\[
+c_b\;=\;\frac{2\sqrt{b-1}}{\sqrt{\pi}}\,
+\exp\!\Bigl(\tfrac12\sum_{n\ge1}\frac{p_n}{n}\Bigr)
+\;=\;\frac{2\sqrt{b-1}}{\sqrt{\pi}}\,
+\exp\!\Bigl(-\frac{1}{4\pi}\int_{-\pi}^{\pi}
+\log\bigl(1-\varphi_b(\theta)\bigr)\,d\theta\Bigr),
+\]
+where $\varphi_b(\theta)=\bigl(\sin(b\theta/2)/(b\sin(\theta/2))\bigr)^2$ is the
+tent characteristic function --- the Wiener--Hopf factorization constant of the
+tent kernel. In base $2$, $\sum_n p_n/n=\sum_n\binom{2n}{n}4^{-n}/n=2\log2$
+gives $c_2=4/\sqrt{\pi}$ in closed form; in base $10$,
+$c_{10}=3.847174895\ldots$, and $c_3=2.478093$, $c_4=2.705016$,
+$c_5=2.921639$, each matching independent walk-DP extrapolations.
 \end{corollary}
 
 \begin{remark}

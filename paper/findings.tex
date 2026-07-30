@@ -259,6 +259,24 @@ ${\sim}0.91$ and a slow power tail) are finite-$k$ features of one exact model.
 Bases $3,4,5$ show the same crest-then-descend shape; base 2
 ($c_2=4/\sqrt{\pi}$, approach from above) is the degenerate case.
 
+\emph{The summit itself.} The criterion converts the peak-line count into a
+stay-nonnegative probability of the reflected tent walk, and the Sparre
+Andersen identity (Wiener--Hopf factorization in combinatorial form) then gives
+the constant in closed form:
+\[
+c_b=\frac{2\sqrt{b-1}}{\sqrt{\pi}}
+\exp\!\Bigl(\tfrac12\sum_{n\ge1}\frac{p_n}{n}\Bigr)
+=\frac{2\sqrt{b-1}}{\sqrt{\pi}}
+\exp\!\Bigl(-\frac{1}{4\pi}\int_{-\pi}^{\pi}
+\log\bigl(1-\varphi_b(\theta)\bigr)\,d\theta\Bigr),
+\]
+with $p_n=\Pr(S_n{=}0)$ and
+$\varphi_b(\theta)=\bigl(\sin(b\theta/2)/(b\sin(\theta/2))\bigr)^2$. Base 2
+collapses by hand ($\sum p_n/n=2\log2$, $c_2=4/\sqrt{\pi}$ exactly); series and
+integral evaluations agree to nine decimals in every base; and
+$c_{10}=3.847174895\ldots$ matches the walk-DP value. The identity was verified
+coefficientwise against a barrier DP to $10^{-15}$.
+
 \section{The spectral expedition}\label{sec:spectral}
 
 Instrumenting the flood recursion and normalizing tank states as
@@ -321,9 +339,11 @@ count-irrelevant --- reachability depends only on ancestor budgets.
 \section{Open problems}
 
 \begin{enumerate}
-\item Extract $c_b$ in closed analytic form from the Wiener--Hopf factorization
-of the tent kernel; verify $c_{10}=3.84717(5)$ and the per-decade ratio
-${\sim}0.91$ from the factorization's subleading singularity.
+\item \emph{(Resolved.)} $c_b$ is extracted in closed form in \S\ref{sec:c}:
+the Sparre Andersen/Wiener--Hopf constant of the tent kernel, exact in base 2
+and $c_{10}=3.847174895\ldots$ in base 10. Still open from this direction: the
+per-decade correction ratio ${\sim}0.91$ from the factorization's subleading
+structure.
 \item A reflection-style bijection proving $Q_2(N)=\binom{2N+3}{N}$ from the
 criterion's interleaved-bit walk.
 \item The full two-dimensional geometry (which cells flood \emph{within} a tank)

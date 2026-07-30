@@ -261,6 +261,26 @@ Consequences:
 3. **The closed-form question reopens, properly posed.** Q(9k−1)/100^k is the survival probability of a tent-walk (sum of two uniform digits, centered) below a one-sided wall — a classical kernel-method / Wiener–Hopf object. Its generating function is algebraic-over-rational in the standard way, and c is expressible through the factorization of the tent kernel 1 − z·((1−u¹⁰)/(10(1−u)))²u⁻⁹ — very plausibly an explicit (if unlovely) algebraic-analytic expression. That, not √15, is what c actually is.
 4. The 24-class transfer structure from the spectral expedition is real but *count-irrelevant*: the classes describe which cells within tanks flood (the 2-D geometry), while the census weights conspire so that per-cell reachability depends only on the scalar walk. Why that conspiracy happens is now the most interesting open question in the project.
 
+## The constant c in closed form (open problem 1, resolved)
+
+The criterion makes the peak-line count a stay-nonnegative probability of the reflected tent walk, and **Sparre Andersen's identity** (the combinatorial form of Wiener–Hopf factorization) turns that into a closed form. With p_n = P(tent walk returns to 0 after n steps) and symmetry P(S_n ≥ 0) = (1+p_n)/2:
+
+```
+c_b = (2·√(b−1)/√π) · exp( ½ · Σ_{n≥1} p_n/n )
+    = (2·√(b−1)/√π) · exp( −(1/4π) ∫_{−π}^{π} ln(1 − φ_b(θ)) dθ ),
+        φ_b(θ) = ( sin(bθ/2) / (b·sin(θ/2)) )²
+```
+
+— the exponential of the log-integral of the tent kernel: the Wiener–Hopf constant, literally. Verification, five ways (`digitsum_wh_constant.py`):
+
+1. Sparre Andersen's identity checked *coefficientwise* against a barrier DP: agreement to 10⁻¹⁶ (base 2) and 10⁻¹⁵ (base 10).
+2. Base 2 collapses by hand: Σ p_n/n = Σ C(2n,n)4⁻ⁿ/n = 2·ln 2, so K = 2 and **c₂ = 4/√π exactly** — the known constant drops out in closed form.
+3. Series (exact p_n to n = 4000 + Euler–Maclaurin tail) and integral evaluations agree to 9 decimals in every base.
+4. **c₁₀ = 3.847174895**, matching the walk-DP extrapolation 3.847175.
+5. c₃ = 2.478093, c₄ = 2.705016, c₅ = 2.921639 — all matching their DP extrapolations within the extrapolations' own error.
+
+So the full asymptotic law, exactly: reachable/allowed on the peak line ∼ c_b/√N with c_b as above. The constant is a genuine Wiener–Hopf object — presumably transcendental for b > 2 (no reason to be algebraic; √15 never had a chance).
+
 ## OEIS status
 
 The sequence f(N) = 5, 13, 25, 41, 61, 85, 113, 145, 505, 1121, 2025, 3245, 4805, 6725, 9021, 11705, 14785, 47905, 102485, 181533, 287881, 424129, … is **not in OEIS** as of July 2026 (searched the full subsequence and the standalone value 102485). Worth submitting.
@@ -287,5 +307,6 @@ All in this directory. Each writes its output PNG(s) into cwd.
 | `digitsum_spectral.py`      | (stdout) decade-map census, closure test, transfer-matrix spectrum |
 | `digitsum_scalar_wh.py`     | (stdout) scalar Wiener–Hopf walk model (the warm-up that found the criterion) |
 | `digitsum_criterion.py`     | (stdout) THE reachability criterion: validation + exact walk-DP counts + c |
+| `digitsum_wh_constant.py`   | (stdout) the Wiener–Hopf closed form for c: SA identity check, series + integral |
 
 Run with `.venv-digitsum/bin/python digitsum_<name>.py`. The directed-reachability DP lives in `digitsum_lib.py` (`monotone_quadrant` / `monotone_reach_count`).
