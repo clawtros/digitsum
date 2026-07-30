@@ -123,6 +123,24 @@ def verify(N=260):
     print(f"3. interior counts class-independent in all {len(by_kK)} "
           f"(k,K) groups: OK")
 
+    # 4. the 9-ladder: every nonempty ENTRY threshold is T = 1-d-9m, m >= 0
+    def front_T(k, f):
+        for T in range(0, 9 * k + 1):
+            if pat_scanline(k, T) == f:
+                return T
+        raise AssertionError("non-scanline front")
+    n_entries = 0
+    for (k, K, EL, EB) in SP.CHILDREN:
+        d = 9 * k - K
+        for f in (EL, EB):
+            if SP._minpos[f] is not None:
+                T = front_T(k, f)
+                assert T <= 1 - d and (1 - d - T) % 9 == 0, \
+                    f"off-ladder threshold T={T}, d={d}"
+                n_entries += 1
+    print(f"4. all {n_entries} nonempty entry thresholds lie on the ladder "
+          f"T = 1-d-9m: OK")
+
 
 if __name__ == "__main__":
     import sys

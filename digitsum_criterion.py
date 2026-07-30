@@ -13,7 +13,8 @@ and verified exhaustively against monotone-DP reachability for base 10
 (N=9..29), base 3 (N=3..15), base 5 (N=5..19), and against exact tank-solver
 counts to N=989 (integer equality; see __main__). Subsumes the monotone lemma and the
 gastank recursion for counting purposes: Q(N) follows from a 1-D walk DP in
-O(k^2 b) time — microseconds where the tank solver needed minutes.
+O(k^2 b^2) time (O(k^2) for fixed base) — microseconds where the tank solver
+needed minutes.
 
 Consequence for the constant c: Q(N)/10^(2k) is the survival probability of a
 tent-walk below a wall — classical one-boundary lattice-path asymptotics
@@ -121,7 +122,7 @@ if __name__ == "__main__":
     from digitsum_tanks import KNOWN_F
 
     # pointwise validation: criterion vs monotone-DP reachability, cell by cell
-    for b, Ns in [(10, range(9, 21)), (3, range(3, 14)), (5, range(5, 18))]:
+    for b, Ns in [(10, range(9, 30)), (3, range(3, 16)), (5, range(5, 20))]:
         assert all(pointwise_check(N, b) == 0 for N in Ns)
         print(f"criterion vs reachability pointwise, base {b}, "
               f"N={Ns.start}..{Ns.stop-1}: zero mismatches", flush=True)

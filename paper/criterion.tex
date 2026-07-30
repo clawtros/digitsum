@@ -35,7 +35,8 @@ pair of $(|x|,|y|)$ satisfies an explicit budget inequality with exactly one uni
 slack, together with allowedness of the cell itself. The proof is elementary and
 constructive. Corollaries: reachability coincides with monotone (staircase)
 reachability; the reachable-cell count is computed exactly by a one-dimensional
-walk recursion in time polynomial in $\log N$-many digits; and the asymptotic
+walk recursion over the $\Theta(N/(b-1))$ digit positions, in time polynomial
+in $N$; and the asymptotic
 density of the reachable set within the allowed cells of its bounding square
 is governed by classical
 one-boundary fluctuation theory.
@@ -256,9 +257,10 @@ $Q(N)\big/b^{2k}$ is the probability that the reflected tent walk stays
 nonnegative for $k$ steps and ends $\ge 1$. By the Sparre Andersen identity and
 the symmetry $\Pr(S_n\ge0)=\bigl(1+p_n\bigr)/2$ with $p_n=\Pr(S_n=0)$, the
 reachable fraction of the allowed cells \emph{of the $k$-digit square}
-$[0,b^k)^2$ --- on the peak line this square is exactly the reachable bounding
-box; the unrestricted allowed set is infinite, so the qualification is needed
---- decays as $c_b/\sqrt{N}$ with
+$[0,b^k)^2$ --- the unrestricted allowed set is infinite, so the qualification
+is needed; on the peak line the square exceeds the reachable bounding box only
+by the row and column at coordinate $b^k-1$, which is forbidden (digit sum
+$N+1$), so the allowed counts agree --- decays as $c_b/\sqrt{N}$ with
 \[
 c_b\;=\;\frac{2\sqrt{b-1}}{\sqrt{\pi}}\,
 \exp\!\Bigl(\tfrac12\sum_{n\ge1}\frac{p_n}{n}\Bigr)
@@ -318,9 +320,10 @@ The collapse is a parity accident of binary: base-$2$ digits give two-valued
 $\pm1$ half-steps, so even-time positions have fixed parity and the
 checkpointed condition becomes a uniform barrier. For $b\ge3$ the half-steps
 take $b$ values and no parity constraint survives, so this mechanism is
-unavailable; no binomial closed form is known (computationally, the sequences
-are neither C-finite nor small-holonomic per residue class, though nonexistence
-is not proved) --- consistent with $c_b$ of Corollary~\ref{cor:asym} being a
+unavailable; no binomial closed form is known (computationally, no C-finite
+recurrence of order $\le13$ and no polynomial-coefficient recurrence of order
+$\le6$, degree $\le8$ exists per residue class; higher orders remain untested
+and nonexistence is not proved) --- consistent with $c_b$ of Corollary~\ref{cor:asym} being a
 transcendental-looking factorization constant.
 \end{remark}
 

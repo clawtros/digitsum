@@ -30,7 +30,8 @@ def tent_pmf():
 
 
 def exact_ck(kmax):
-    """c_k = sqrt(9k-1) * P(stay>=0, end>=1) / P(end>=1), exactly (float DP)."""
+    """c_k = sqrt(9k-1) * P(stay>=0, end>=1) / P(end>=1). The recursion is
+    exact; the evaluation is double-precision (no certified error bounds)."""
     pmf = tent_pmf()
     span = B * (kmax + 2) + 2
     W = np.zeros(span)
