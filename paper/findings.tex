@@ -7,6 +7,8 @@
 \usepackage{microtype}
 \usepackage{xcolor}
 \usepackage{booktabs}
+\usepackage{graphicx}
+\graphicspath{{../}}
 \usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
 
 \newtheorem{theorem}{Theorem}
@@ -54,7 +56,16 @@ f(19)=102{,}485,\qquad \text{bounding box } [-298,298]^2 ,
 the box ending exactly at the first \emph{axis cliff}: $\ds(299)=20$ makes the
 entire column $|x|=299$ forbidden. The region is $4$-fold symmetric, diamond-like at
 large scale, pierced by rectangular ``death zones'' and nested self-similar
-triangular voids.
+triangular voids (Figure~\ref{fig:reach}).
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.55\textwidth]{digitsum_reach.png}
+\caption{The reachable set at $N=19$ ($102{,}485$ cells, box $[-298,298]^2$):
+diamond envelope, rectangular death zones, and the nested ``tri-force''
+triangular voids from the self-similarity of digit sums at powers of ten.}
+\label{fig:reach}
+\end{figure}
 
 \subsection*{Allowed versus reachable}
 Each row $y$ of the allowed set is the one-dimensional set
@@ -63,7 +74,18 @@ $1$-D threshold sets. Counting allowed cells in the bounding box at $N=19$ gives
 $166{,}973$, versus $102{,}485$ reachable: a gap of $64{,}488$ cells
 ($38.6\%$) that satisfy the constraint but are cut off behind carry cliffs ---
 \emph{islands}. The canonical island: $(300,0)$ is allowed ($\ds=3$) but hidden
-behind the forbidden column $x=299$.
+behind the forbidden column $x=299$. Figure~\ref{fig:signal} shows the 1-D
+digit-sum signal whose threshold crossings generate the cliffs.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{digitsum_signal.png}
+\caption{The digit-sum signal $\ds(x)$ for $x=0..300$ against the threshold
+$N=19$ (red). Reachability along the axis ends at the first crossing,
+$\ds(299)=20$; each row of the 2-D problem sees this same signal at a reduced
+threshold.}
+\label{fig:signal}
+\end{figure}
 
 \section{The staircase in \texorpdfstring{$N$}{N}}
 
@@ -90,8 +112,27 @@ $N$ & $f(N)$ & allowed (box) & ratio & box \\
 \end{center}
 
 Within each decade the topology is fixed and holes fill in monotonically; each new
-decade adds an outer, rescaled copy of the previous decade's pattern. The ratio
+decade adds an outer, rescaled copy of the previous decade's pattern
+(Figures~\ref{fig:ratio} and \ref{fig:peaktrough}). The ratio
 minimum falls two steps \emph{after} each cliff ($N=11,20,29$), not at it.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{digitsum_ratio_extended.png}
+\caption{The Cantor-like staircase: reachable count, allowed-in-box count, and
+their ratio for $N\le 28$, with cliffs at $N=9,18,27$ where the bounding box
+jumps a decade.}
+\label{fig:ratio}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{digitsum_peak_trough.png}
+\caption{First-of-decade (trough) versus last-of-decade (peak) shapes for
+decades 2 and 3. The $N=11$ trough is the $N=20$ trough rescaled; the recursion
+made visible.}
+\label{fig:peaktrough}
+\end{figure}
 
 \section{The monotone lemma}
 
@@ -104,9 +145,19 @@ R(x,y)=\text{allowed}(x,y)\wedge\bigl(R(x{-}1,y)\vee R(x,y{-}1)\bigr)
 reproduces full undirected reachability. Verified for $N\le 22$ (base 10) and for
 bases $2\text{--}5$; later \emph{proved} as a corollary of the criterion of
 \S\ref{sec:criterion}. Connectivity failures are always total (islands), never
-partial (no cell requires a detour). Practically, the lemma converts BFS into a
-vectorized row sweep, ${\sim}100\times$ faster --- the workhorse for everything
-below.
+partial (no cell requires a detour); see Figure~\ref{fig:depth}. Practically, the
+lemma converts BFS into a vectorized row sweep, ${\sim}100\times$ faster --- the
+workhorse for everything below.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.48\textwidth]{digitsum_depth.png}\hfill
+\includegraphics[width=0.48\textwidth]{digitsum_detour.png}
+\caption{Left: cells colored by geodesic (BFS) distance from the origin at
+$N=19$. Right: detour $=$ geodesic $-\,(|x|+|y|)$, identically zero --- the
+observation that became the monotone lemma and, eventually, the criterion.}
+\label{fig:depth}
+\end{figure}
 
 \section{Base 2: an exact closed form}\label{sec:base2}
 
@@ -124,7 +175,18 @@ subtraction, and
 \]
 The ratio tends to \emph{zero}: there is no finite asymptotic density. $Q_2$ is
 OEIS A002054 (ballot numbers), pointing to a lattice-path bijection; the base-10
-sequence $f(N)$ is not in OEIS.
+sequence $f(N)$ is not in OEIS. Figure~\ref{fig:strip} compares the region across
+bases: base 2 is densest and nearest a solid diamond (carries at every step weave
+fine cliffs), while larger bases have rarer but more violent carries, punching
+larger holes.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{digitsum_strip.png}
+\caption{Reachable regions in bases $2,3,4,5,10$, with $N$ chosen so each has
+axis reach ${\sim}\pm250$--$500$. Base 10 is the noisiest member of the family.}
+\label{fig:strip}
+\end{figure}
 
 \section{Gastanks: the carry-free decomposition}\label{sec:tanks}
 
