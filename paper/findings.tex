@@ -166,8 +166,14 @@ In base $2$ the quadrant count is a single binomial coefficient:
 Q_2(N)=\binom{2N+3}{N},\qquad
 f_2(N)=4\binom{2N+3}{N}-2^{N+3}+5 ,
 \]
-verified for $N\le 15$ with the $N=15$ value \emph{predicted before} a
-$4.3\times10^9$-cell sweep confirmed it. The allowed-set side is classical,
+first verified for $N\le 15$ (the $N=15$ value \emph{predicted before} a
+$4.3\times10^9$-cell sweep confirmed it), later \emph{proved} from the
+criterion: interleaving the bits makes reachability a $\pm1$-path condition
+whose even-checkpoint constraint collapses, by parity, to the uniform barrier
+``never reach $+2$'', and reflection at level $2$ telescopes the count to
+$\binom{2k}{k-1}+\binom{2k}{k-2}$ --- the allowed cells of the top two weight
+layers, with an explicit \emph{surfacing map} bijection (complement prefixes up
+to first hits of level $-2$). The allowed-set side is classical,
 $\bigl(4^{N+1}-\binom{2N+2}{N+1}\bigr)/2$, so the island count is closed-form by
 subtraction, and
 \[
@@ -359,8 +365,12 @@ the Sparre Andersen/Wiener--Hopf constant of the tent kernel, exact in base 2
 and $c_{10}=3.847174895\ldots$ in base 10. Still open from this direction: the
 per-decade correction ratio ${\sim}0.91$ from the factorization's subleading
 structure.
-\item A reflection-style bijection proving $Q_2(N)=\binom{2N+3}{N}$ from the
-criterion's interleaved-bit walk.
+\item \emph{(Resolved.)} $Q_2(N)=\binom{2N+3}{N}$ is proved from the
+criterion's interleaved-bit walk (\S\ref{sec:base2}): the even-checkpoint
+condition collapses by parity to a uniform barrier, reflection telescopes the
+count, and the surfacing map gives an explicit bijection onto the top two
+weight layers. The collapse is a parity accident of binary --- the structural
+reason no analogue exists for $b\ge3$.
 \item The full two-dimensional geometry (which cells flood \emph{within} a tank)
 retains the $24$-class transfer structure; characterize its fixed point.
 \item Submit $f(N)$ (and the peak-line $Q$ data) to OEIS.

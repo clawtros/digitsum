@@ -295,6 +295,16 @@ Via the criterion, base-2 reachability of (x,y) is a condition on the interleave
 
 What is sought is not merely a proof of the identity (a kernel-method/Lagrange-inversion computation is expected to be routine) but a **bijection**: either constrained 2k-words ⟷ free (2k+1)-words (the "+1 letter" smells of the Dvoretzky–Motzkin cycle lemma, but the domination condition is checked only at *even* positions, so a "checkpointed cycle lemma" — a statement about even-offset rotations — would be needed), or a weight-shifting map reachable ⟷ top-two-layers in the style of Franklin's involution. The dream outcome is a map natural enough to show *why* base 2 collapses and exactly which ingredient fails for b ≥ 3.
 
+### Resolved: the surfacing map
+
+Three moves (`digitsum_bijection.py`, all verified exhaustively for k = 2..7):
+
+1. **Parity collapse.** Read w as a ±1 path (1 = up). Even-time positions are even integers, so "≤ 0 at every even time" ⟺ "**never reach +2 at any time**." The checkpointed condition was secretly a uniform barrier — no checkpointed cycle lemma needed; parity does it.
+2. **Two-line proof of the identity.** Good = {max ≤ 1, end ≤ −2}. Reflect at level 2: bad paths ending at −2m pair with free paths ending at 2m+4; the count telescopes by binomial symmetry to C(2k,k−1) + C(2k,k−2) = C(2k+1,k−1). Combined with the (proved) criterion, **Q₂(N) = C(2N+3,N) is now a theorem.**
+3. **The bijection.** The Garsia–Milne chase of the reflection collapses to one clean rule, the *surfacing map*: **while w has ≤ k−3 ones, complement the prefix up to and including the first time the walk hits level −2** (each round adds exactly 2 ones). It terminates at exactly k−1 or k−2 ones — an allowed cell of the top two elevation layers. Inverse (*sinking*): while the walk touches +2, complement the prefix up to the first +2-hit. Verified bijective with two-sided inverse on all 4^k words for k ≤ 7.
+
+And the dream-outcome question — why base 2 and only base 2 — gets a sharp answer: the parity collapse works because base-2 digits give *two-valued* (±1) half-steps, whose even-time values have fixed parity. For b ≥ 3 the interleaved half-steps take b values, even-time positions have no parity constraint, and the checkpoint condition is genuinely checkpointed — no uniform barrier, no reflection, no binomial. That is the structural reason the base-10 constant is a transcendental-looking Wiener–Hopf integral while base 2's is a binomial: **the collapse is exactly a parity accident of binary.**
+
 ## OEIS status
 
 The sequence f(N) = 5, 13, 25, 41, 61, 85, 113, 145, 505, 1121, 2025, 3245, 4805, 6725, 9021, 11705, 14785, 47905, 102485, 181533, 287881, 424129, … is **not in OEIS** as of July 2026 (searched the full subsequence and the standalone value 102485). Worth submitting.

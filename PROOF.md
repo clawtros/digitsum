@@ -131,6 +131,13 @@ is why the criterion is sharp rather than merely necessary or sufficient.
    ratio is a classical one-boundary walk survival probability; its c/√N law
    and the constant c (= 3.84717(5) in base 10, exactly 4/√π in base 2) are
    Wiener–Hopf/kernel-method objects for the tent-step walk.
-4. **Base 2.** Q(N) = C(2N+3, N) is now a pure lattice-path identity:
-   pairs of bit-strings whose interleaved walk respects the barrier — a
-   reflection-style bijection should finish it.
+4. **Base 2.** Q(N) = C(2N+3, N) is proved. By the criterion, reachable cells
+   are interleaved bit-words of length 2k (k = N+1) whose ±1 path satisfies the
+   even-checkpoint condition and ends ≤ −2. Since even-time positions are even
+   integers, the checkpoint condition is equivalent to the uniform barrier
+   "max ≤ +1"; reflection at level 2 then gives
+   #{max ≤ 1, end ≤ −2} = Σ_{m≥1} [C(2k, k−m) − C(2k, k+m+2)]
+   = C(2k, k−1) + C(2k, k−2) = C(2k+1, k−1) = C(2N+3, N).
+   An explicit bijection onto the allowed cells of the top two elevation layers
+   (the *surfacing map*: repeatedly complement the prefix up to the first
+   hitting time of level −2) is verified in `digitsum_bijection.py`.

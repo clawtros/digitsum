@@ -270,6 +270,41 @@ $c_{10}=3.847174895\ldots$, and $c_3=2.478093$, $c_4=2.705016$,
 $c_5=2.921639$, each matching independent walk-DP extrapolations.
 \end{corollary}
 
+\begin{corollary}[Base 2]\label{cor:base2}
+For $b=2$, $Q(N)=\binom{2N+3}{N}$. Moreover the reachable set is equinumerous
+with the set of allowed cells of digit-sum weight exactly $N$ or $N-1$, via an
+explicit bijection.
+\end{corollary}
+
+\begin{proof}
+Put $k=N+1$ and interleave the bits of $(x,y)$ into $w\in\{0,1\}^{2k}$, read as
+a $\pm1$ path ($1=$ up). The criterion says the path is $\le 0$ at every even
+time and ends $\le-2$. Even-time positions are even integers, so the first
+condition is equivalent to the uniform barrier ``never reach $+2$''. Reflecting
+at level $2$ pairs the paths with $\max\ge2$ ending at $-2m$ with free paths
+ending at $2m+4$, whence
+\[
+Q(N)=\sum_{m\ge1}\Bigl[\tbinom{2k}{k-m}-\tbinom{2k}{k+m+2}\Bigr]
+=\tbinom{2k}{k-1}+\tbinom{2k}{k-2}=\tbinom{2k+1}{k-1}=\tbinom{2N+3}{N},
+\]
+the middle equality by the symmetry $\binom{2k}{j}=\binom{2k}{2k-j}$ and the
+last by Pascal. The two surviving terms count the free words of weight $k-1$
+and $k-2$ --- the top two layers --- and the Garsia--Milne chase of the
+reflection collapses to an explicit \emph{surfacing map}: while $w$ has
+$\le k-3$ ones, complement the prefix up to and including the first hitting
+time of level $-2$ (each round adds two ones); the inverse complements prefixes
+up to first hits of $+2$. Bijectivity was verified exhaustively for $k\le7$.
+\end{proof}
+
+\begin{remark}
+The collapse is a parity accident of binary: base-$2$ digits give two-valued
+$\pm1$ half-steps, so even-time positions have fixed parity and the
+checkpointed condition becomes a uniform barrier. For $b\ge3$ the half-steps
+take $b$ values, no parity constraint survives, and no binomial closed form
+exists --- consistent with $c_b$ of Corollary~\ref{cor:asym} being a genuinely
+transcendental-looking factorization constant.
+\end{remark}
+
 \begin{remark}
 All statements were additionally verified computationally: the criterion against
 exhaustive breadth-first search for bases $3,5,10$ over their feasible ranges, and
