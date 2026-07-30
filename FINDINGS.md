@@ -283,6 +283,18 @@ c_b = (2·√(b−1)/√π) · exp( ½ · Σ_{n≥1} p_n/n )
 
 So the full asymptotic law, exactly: reachable/allowed on the peak line ∼ c_b/√N with c_b as above. The constant is a genuine Wiener–Hopf object — presumably transcendental for b > 2 (no reason to be algebraic; √15 never had a chance).
 
+## Open problem 2, sharpened: the base-2 bijection
+
+Via the criterion, base-2 reachability of (x,y) is a condition on the interleaved bit-word w = x₁y₁x₂y₂…x_k y_k (k = N+1): **majority-0 at every even checkpoint** (after 2s letters, #1 ≤ s) and **total ones ≤ k−1**. So Q₂(N) = C(2N+3, N) is the pure word identity
+
+```
+#{w ∈ {0,1}^{2k} : even-checkpoint majority-0, ones ≤ k−1}  =  C(2k+1, k−1)
+```
+
+— a constrained variable-weight set equinumerous with the *unconstrained* fixed-weight set of (2k+1)-words with exactly k−1 ones. Equivalently (Pascal): C(2N+3,N) = C(2N+2,N) + C(2N+2,N−1), i.e. **the reachable set is equinumerous with the allowed cells of the top two elevation layers** (elevation exactly N or N−1), reachability ignored — geometrically shocking, since one set contains the deep submerged interior and the other hugs the waterline.
+
+What is sought is not merely a proof of the identity (a kernel-method/Lagrange-inversion computation is expected to be routine) but a **bijection**: either constrained 2k-words ⟷ free (2k+1)-words (the "+1 letter" smells of the Dvoretzky–Motzkin cycle lemma, but the domination condition is checked only at *even* positions, so a "checkpointed cycle lemma" — a statement about even-offset rotations — would be needed), or a weight-shifting map reachable ⟷ top-two-layers in the style of Franklin's involution. The dream outcome is a map natural enough to show *why* base 2 collapses and exactly which ingredient fails for b ≥ 3.
+
 ## OEIS status
 
 The sequence f(N) = 5, 13, 25, 41, 61, 85, 113, 145, 505, 1121, 2025, 3245, 4805, 6725, 9021, 11705, 14785, 47905, 102485, 181533, 287881, 424129, … is **not in OEIS** as of July 2026 (searched the full subsequence and the standalone value 102485). Worth submitting.
