@@ -1,15 +1,17 @@
 """The rho ~ 0.91 'subleading structure', resolved: it was never a geometric.
 
-With the criterion + Sparre Andersen machinery, c_k = sqrt(N) P_k / A_k is
-exactly computable, and its correction structure is a pure power series
+With the criterion + Sparre Andersen machinery, c_k = sqrt(N) P_k / A_k follows
+an exact recursion (evaluated here in double precision, without certified error
+bounds), and its correction structure is modeled by the power family
     c_k = c (1 + alpha k^{-1/2} + beta/k + gamma k^{-3/2} + ...),
-with alpha forced by the denominator A_k = (1-p_k)/2 alone:
-alpha = lim p_k sqrt(k) = 1/(sigma sqrt(2 pi))  (= 1/sqrt(pi) in base 2).
-A genuine geometric would need a second singularity of the generating function;
-the next one comes from the first SIDE LOBE of the tent kernel phi(theta),
-at phi ~ 0.05 — a true ratio of ~0.05/step, utterly negligible.
+where alpha is DERIVED — forced by the denominator A_k = (1-p_k)/2 alone:
+alpha = lim p_k sqrt(k) = 1/(sigma sqrt(2 pi))  (= 1/sqrt(pi) in base 2) —
+and the higher coefficients are NUMERICALLY FITTED. A genuine geometric would
+need a second singularity of the generating function; the next one comes from
+the first SIDE LOBE of the tent kernel phi(theta), at phi ~ 0.05 — a true
+ratio of ~0.05/step, utterly negligible at any relevant k.
 
-This script: (1) computes exact c_k to k=1500; (2) fits the power family with
+This script: (1) computes c_k to k=1500; (2) fits the power family with
 alpha PINNED to theory; (3) predicts the crest location k* = (2|beta|/alpha)^2
 and compares with the observed crest; (4) replays the historical single-
 geometric fit on the old data window and recovers rho ~ 0.91 from the pure

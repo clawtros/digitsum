@@ -10,7 +10,7 @@ ladder T = 1-d-9m, m >= 0 (m = number of ancestral walls the feed has passed
 through), plus empty. Class counts per d are (rungs+1)^2 - 1: 3, 8, 15, 24, ...
 — the historical "24" was the 3-level signature truncation's shadow.
 
-This script first RE-VERIFIES the three facts (run with --verify; uses the
+This script first RE-VERIFIES the four facts (run with --verify; uses the
 census instrumentation of digitsum_spectral, ~a minute), then renders
 representative tanks (scale 3, exact flood) for the class families at
 d = 1, 0, -8. Output: digitsum_classes.png.
@@ -84,7 +84,7 @@ def panel(d, TL, TB):
 
 
 def verify(N=260):
-    """Re-run the three exact front-class validations on the census at N."""
+    """Re-run the four front-class validations on the census at N."""
     import digitsum_spectral as SP
     from collections import defaultdict
     SP.census(N)

@@ -13,8 +13,10 @@ with phi_b(t) = (sin(b t/2) / (b sin(t/2)))^2 the tent characteristic function.
 Base 2 collapses in closed form: sum p_n/n = 2 log 2, K = 2, c_2 = 4/sqrt(pi).
 
 This script (1) verifies the Sparre Andersen identity coefficientwise against a
-barrier DP, (2) evaluates the series (exact p_n + Euler-Maclaurin tail) and the
-integral independently, and (3) compares c_b with the DP extrapolations.
+barrier DP, (2) evaluates the series (p_n by direct convolution in double
+precision — the recursion is exact, the evaluation carries no certified error
+bounds — plus an Euler-Maclaurin tail) and the integral independently, and
+(3) compares c_b with the DP extrapolations.
 """
 
 import numpy as np
@@ -27,7 +29,8 @@ def tent_pmf(b):
 
 
 def p_central(b, nmax):
-    """p_n = P(tent walk at 0 after n steps), exactly, for n = 1..nmax."""
+    """p_n = P(tent walk at 0 after n steps) by direct convolution, in double
+    precision (exact recursion, uncertified floating-point evaluation)."""
     pmf = tent_pmf(b)
     B = b - 1
     dist = np.ones(1)
