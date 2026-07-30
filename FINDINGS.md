@@ -175,6 +175,8 @@ The working mental model — nested tanks of fluid spilling over weirs — turns
 
 ### Glossary
 
+All four terms in one real strip of the N = 19 plane — see `digitsum_glossary.png` (produced by `digitsum_glossary.py`): tanks (25,0)…(31,1) with their shrinking silhouettes, weirs narrowing 4 → 3 → 2 → 1 → closed toward the wall at x = 299, and the roomy-but-dry island tank (30,0) behind it.
+
 Two equivalent physical readings. In **coordinate space**, fluid sits in the lattice itself and only ever flows right/up (the monotone lemma). In **terrain space**, elevation at `(x, y)` is `ds(x) + ds(y)`, the waterline is N, allowed cells are the submerged ones, and the reachable set is the submerged region connected to the origin — islands are submerged basins cut off behind ridges. The tank silhouettes live in the first picture; the overflow intuition is exact in the second.
 
 **Tank** — `T_k(K)`: a scale-k block `[0,10^k) × [0,10^k)` in local coordinates with budget K; the local cell `(u, v)` is allowed iff `ds(u) + ds(v) ≤ K`. Silhouette: at k = 1 literally the staircase triangle `u + v ≤ K`; a full square when `K ≥ 18k`; between those, a square with the far corner cut away — the classic gastank profile. Every tank is a 10×10 grid of child tanks, the child at digit position `(i, j)` being `T_{k−1}(K − i − j)`: budgets step down by 1 per digit rightward or upward, with no carry corrections inside, ever. A tank with capacity but no entries is **dry**; dry-but-roomy tanks are precisely the islands, and `(300, 0)` sits in the canonical one.
@@ -308,5 +310,6 @@ All in this directory. Each writes its output PNG(s) into cwd.
 | `digitsum_scalar_wh.py`     | (stdout) scalar Wiener–Hopf walk model (the warm-up that found the criterion) |
 | `digitsum_criterion.py`     | (stdout) THE reachability criterion: validation + exact walk-DP counts + c |
 | `digitsum_wh_constant.py`   | (stdout) the Wiener–Hopf closed form for c: SA identity check, series + integral |
+| `digitsum_glossary.py`      | `digitsum_glossary.png` — annotated tank/wall/weir/wetting-front strip at N=19 |
 
 Run with `.venv-digitsum/bin/python digitsum_<name>.py`. The directed-reachability DP lives in `digitsum_lib.py` (`monotone_quadrant` / `monotone_reach_count`).
