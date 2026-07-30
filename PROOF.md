@@ -31,8 +31,10 @@ Three elementary facts about digit sums, used repeatedly:
   when X ends in t zeros).
 - (D2) ds(X·b^m − 1) = ds(X−1) + B·m (the digits are those of X−1 followed by
   m copies of B — the trailing-nines wall).
-- (D3) max { ds(t) : 0 ≤ t ≤ a·b^m } = (a−1) + B·m for a ≥ 1 (attained at
-  a·b^m − 1).
+- (D3) for m ≥ 1 and 1 ≤ a < b (a single digit):
+  max { ds(t) : 0 ≤ t ≤ a·b^m } = (a−1) + B·m, attained at a·b^m − 1.
+  (False without these hypotheses — e.g. m = 0 gives max = a — but the proof
+  only ever applies it to leading digits with m ≥ 1.)
 
 ## Reduction to the quadrant
 
@@ -101,13 +103,13 @@ corresponding leg is shorter or empty and the bounds only improve.)
 *Leg 2 — inside the tank.* The tank (a, c) at scale j−1, entered at its
 bottom-left corner, is a copy of the same problem with j−1 digit positions and
 threshold M′ = M − a − c: a local cell (u, v) is allowed iff
-ds(u) + ds(v) ≤ M′. The original conditions (i) at s ≥ 2 and (ii) translate
-verbatim: for 1 ≤ s′ = s − 1 ≤ j−1,
+ds(u) + ds(v) ≤ M′. The original conditions (i) at 2 ≤ s ≤ j−1 and (ii)
+translate verbatim: for 1 ≤ s′ = s − 1 ≤ j−2,
 
   P_s ≤ M − B(j−s) + 1 ⟺ P′_{s′} ≤ M′ − B((j−1) − s′) + 1,
 
-where P′ are the prefix sums of (x′, y′), and (ii) becomes
-ds(x′) + ds(y′) ≤ M′. So (x′, y′) satisfies the (j−1)-digit criterion at
+where P′ are the prefix sums of (x′, y′); the final prefix s = j is handled
+separately by (ii), which becomes ds(x′) + ds(y′) ≤ M′. So (x′, y′) satisfies the (j−1)-digit criterion at
 threshold M′, and by the induction hypothesis there is a monotone allowed
 staircase from the tank's corner to it; adding (a·b^{j−1}, c·b^{j−1}) to every
 cell keeps it allowed globally (the leading digits contribute exactly a + c).
@@ -140,4 +142,7 @@ is why the criterion is sharp rather than merely necessary or sufficient.
    = C(2k, k−1) + C(2k, k−2) = C(2k+1, k−1) = C(2N+3, N).
    An explicit bijection onto the allowed cells of the top two elevation layers
    (the *surfacing map*: repeatedly complement the prefix up to the first
-   hitting time of level −2) is verified in `digitsum_bijection.py`.
+   hitting time of level −2) is proved by a round-inversion lemma — the flipped
+   word's first +2-hit occurs at the same position, so one sinking round undoes
+   one surfacing round; termination and stopping match by weight parity — and
+   additionally verified exhaustively in `digitsum_bijection.py`.

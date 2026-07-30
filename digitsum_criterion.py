@@ -80,8 +80,51 @@ def c_constant(b, kmax=16000, ks=None):
     return coef[0], vals
 
 
+def pointwise_check(N, b=10):
+    """Exhaustive cell-by-cell comparison of the criterion against monotone-DP
+    reachability over the whole quadrant. Returns the number of mismatches."""
+    G = axis_bound(N, b)
+    k = N // (b - 1) + 1
+    d0 = (b - 1) * k - N
+    pre = np.zeros((k, G), dtype=np.int32)
+    for v in range(G):
+        t, digs = v, []
+        for _ in range(k):
+            digs.append(t % b)
+            t //= b
+        acc = 0
+        for s, dg in enumerate(reversed(digs)):
+            acc += dg
+            pre[s, v] = acc
+    dsv = pre[k - 1]
+    ok = np.ones((G, G), bool)
+    for s in range(k):
+        d_s = d0 + pre[s][None, :] + pre[s][:, None] - (b - 1) * (s + 1)
+        ok &= d_s <= (1 if s < k - 1 else 0)
+    R_prev, rows = None, []
+    for y in range(G):
+        A = (dsv + int(dsv[y])) <= N
+        if y == 0:
+            S = np.zeros(G, bool)
+            S[0] = True
+        else:
+            S = R_prev & A
+        bid = np.cumsum(~A)
+        last = np.maximum.accumulate(np.where(S, bid, -1))
+        R = A & (last == bid)
+        rows.append(R)
+        R_prev = R
+    return int(np.count_nonzero(ok != np.array(rows)))
+
+
 if __name__ == "__main__":
     from digitsum_tanks import KNOWN_F
+
+    # pointwise validation: criterion vs monotone-DP reachability, cell by cell
+    for b, Ns in [(10, range(9, 21)), (3, range(3, 14)), (5, range(5, 18))]:
+        assert all(pointwise_check(N, b) == 0 for N in Ns)
+        print(f"criterion vs reachability pointwise, base {b}, "
+              f"N={Ns.start}..{Ns.stop-1}: zero mismatches", flush=True)
 
     # integer validation vs BFS-era values and the exact tank data
     for N in range(1, 37):

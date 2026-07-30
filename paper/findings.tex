@@ -37,7 +37,7 @@ fractal geometry of the region; a Cantor-like staircase in $N$ with cliffs at
 multiples of $9$; an exact closed form in base $2$,
 $Q(N)=\binom{2N+3}{N}$; a carry-free self-similar (``gastank'') decomposition
 giving a polynomial-time exact solver; the asymptotic law
-$\mathrm{reachable}/\mathrm{allowed}\sim c/\sqrt{N}$ with $c=3.84717(5)$
+$\mathrm{reachable}/\mathrm{allowed\ in\ box}\sim c/\sqrt{N}$ with $c=3.84717(5)$
 (refuting a tempting $\sqrt{15}$); and finally an exact two-line reachability
 criterion, proved in a companion paper, which subsumes every structure met along
 the way and reduces all counting to a one-dimensional walk recursion. We keep the
@@ -257,7 +257,10 @@ $(300,0)$. Orange marks the wetting front on each tank's exit edge.}
 \section{The constant \texorpdfstring{$c$}{c}: two false summits}\label{sec:c}
 
 On the \emph{peak line} $N\equiv 8 \pmod 9$ (box $=$ bounding box), set
-$c_N=\sqrt{N}\cdot\mathrm{reachable}/\mathrm{allowed}$.
+$c_N=\sqrt{N}\cdot\mathrm{reachable}/\mathrm{allowed\ in\ box}$ (the box is
+the $k$-digit square, which on the peak line equals the reachable bounding
+box; the unrestricted allowed set is infinite, so the qualification is
+required).
 
 \emph{False summit 1: $\sqrt{15}$.} Pair extrapolations through $N=629$ landed
 within $1.3\times10^{-5}$ of $\sqrt{15}=3.87298$. But exact data to $N=989$
@@ -353,7 +356,8 @@ $a+(c{-}1)\underline{9\cdots9}$, allowed exactly under the criterion bound ---
 followed by recursion inside the tank at threshold $N-a-c$. The two $+1$'s
 coincide; the criterion is sharp. The monotone lemma follows as a corollary.
 
-Consequences: counting reduces to a $1$-D walk recursion ($O(k^2 b)$ ---
+Consequences: counting reduces to a $1$-D walk recursion ($O(k^2b^2)$, i.e.\
+$O(k^2)$ for fixed base ---
 microseconds at any $N$); the constant $c$ is a one-boundary survival constant of
 the centered tent walk, i.e.\ a kernel-method/Wiener--Hopf object with an
 explicit (if unlovely) analytic characterization; and the $24$-class front
@@ -364,18 +368,21 @@ count-irrelevant --- reachability depends only on ancestor budgets.
 masquerade}\label{sec:rho}
 
 The criterion makes $c_k$ exactly computable, and its correction structure is a
-pure power family
+power family
 \[
 c_k \;=\; c\,\Bigl(1+\frac{\alpha}{\sqrt{k}}+\frac{\beta}{k}
 +\frac{\gamma}{k^{3/2}}+\cdots\Bigr),
 \qquad \alpha=\frac{1}{\sigma\sqrt{2\pi}}=0.098213\ldots,
 \]
-with $\alpha$ forced by the denominator alone (the lattice atom
-$\Pr(S_k{=}0)$ in the allowed-count normalization; $1/\sqrt{\pi}$ exactly in
-base~2). With $\alpha$ pinned to theory, fitting $\beta=-0.4147$ (and two
-higher terms) reproduces the exact $c_k$ to rms $9\times10^{-12}$ on
-$k\in[300,1500]$ and extrapolates out-of-window to $2.5\times10^{-6}$. There is
-no geometric term. Three confirmations: the crest is the two-term power
+with $\alpha$ \emph{derived} --- forced by the denominator alone (the lattice
+atom $\Pr(S_k{=}0)$ in the allowed-count normalization; $1/\sqrt{\pi}$ exactly
+in base~2) --- and the higher coefficients \emph{numerically fitted}: with
+$\alpha$ pinned to theory, $\beta=-0.4147$ (and two higher terms) reproduces
+the exact $c_k$ to rms $9\times10^{-12}$ on $k\in[300,1500]$ and extrapolates
+out-of-window to $2.5\times10^{-6}$. No geometric term is needed, and any
+admixture is bounded far below the historical claim; a first-principles
+derivation of $\beta$ from the Sparre Andersen generating function remains
+open. Three confirmations: the crest is the two-term power
 phenomenon $k^*=(2|\beta|/\alpha)^2=71$ (observed $73$, $N=656$); refitting a
 single geometric on the historical window $q\in[28,69]$ returns
 $\rho=0.9153$ at rms $1.6\times10^{-5}$ --- precisely the numbers that launched
@@ -394,7 +401,7 @@ stationary shallow census already said the convergence was not geometric.
 the Sparre Andersen/Wiener--Hopf constant of the tent kernel, exact in base 2
 and $c_{10}=3.847174895\ldots$ in base 10. The per-decade correction ratio
 ${\sim}0.91$ is resolved in \S\ref{sec:rho}: not an eigenvalue but a
-finite-window artifact of the exact power family
+finite-window artifact of the power family
 $c_k=c\,(1+\alpha k^{-1/2}+\beta/k+\cdots)$, $\alpha=1/(\sigma\sqrt{2\pi})$,
 $\beta=-0.4147$, which reproduces $c_k$ to $9\times10^{-12}$, predicts the
 crest at $k^*=(2|\beta|/\alpha)^2=71$ (observed $73$), and --- refit with a
@@ -405,7 +412,9 @@ lobe) has ratio $0.0505$ per step: invisible.
 criterion's interleaved-bit walk (\S\ref{sec:base2}): the even-checkpoint
 condition collapses by parity to a uniform barrier, reflection telescopes the
 count, and the surfacing map gives an explicit bijection onto the top two
-weight layers. The collapse is a parity accident of binary --- the structural
+weight layers, proved by a round-inversion lemma (the flipped word's first
+$+2$-hit occurs at the same position, so sinking undoes surfacing round by
+round) and verified exhaustively for $k\le7$. The collapse is a parity accident of binary --- the structural
 reason no analogue exists for $b\ge3$.
 \item \emph{(Resolved.)} The ``$24$-class'' structure of the 2-D flood is fully
 characterized (Figure~\ref{fig:classes}): every wetting front is a

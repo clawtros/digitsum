@@ -36,7 +36,8 @@ slack, together with allowedness of the cell itself. The proof is elementary and
 constructive. Corollaries: reachability coincides with monotone (staircase)
 reachability; the reachable-cell count is computed exactly by a one-dimensional
 walk recursion in time polynomial in $\log N$-many digits; and the asymptotic
-density of the reachable set within the allowed set is governed by classical
+density of the reachable set within the allowed cells of its bounding square
+is governed by classical
 one-boundary fluctuation theory.
 \end{abstract}
 
@@ -204,14 +205,14 @@ corresponding leg is empty and the bounds only improve.)
 \emph{Leg 2: inside the tank.} The tank $(a,c)$, entered at its bottom-left corner,
 is a copy of the same problem with $j-1$ digit positions and threshold
 $M'=M-a-c$: a local cell $(u,v)$ is allowed iff $\ds(u)+\ds(v)\le M'$. For
-$2\le s\le j$ put $s'=s-1$; then
+$2\le s\le j-1$ put $s'=s-1$; then
 \[
 P_s\le M-B(j-s)+1
 \iff
 P'_{s'}\le M'-B\bigl((j{-}1)-s'\bigr)+1,
 \]
-where $P'$ are the prefix sums of $(x',y')$, and (ii) becomes
-$\ds(x')+\ds(y')\le M'$. Thus $(x',y')$ satisfies the $(j{-}1)$-digit criterion at
+where $P'$ are the prefix sums of $(x',y')$; the final prefix $s=j$ is handled
+separately by (ii), which becomes $\ds(x')+\ds(y')\le M'$. Thus $(x',y')$ satisfies the $(j{-}1)$-digit criterion at
 threshold $M'$, and the induction hypothesis provides a monotone allowed staircase
 from the corner to it; translating by $(a b^{j-1},c\,b^{j-1})$ adds exactly $a+c$
 to every digit sum, preserving global allowedness.
@@ -254,7 +255,10 @@ On the peak line $N\equiv B-1 \pmod B$ one has $d_0=1$, and
 $Q(N)\big/b^{2k}$ is the probability that the reflected tent walk stays
 nonnegative for $k$ steps and ends $\ge 1$. By the Sparre Andersen identity and
 the symmetry $\Pr(S_n\ge0)=\bigl(1+p_n\bigr)/2$ with $p_n=\Pr(S_n=0)$, the
-reachable fraction of the allowed set decays as $c_b/\sqrt{N}$ with
+reachable fraction of the allowed cells \emph{of the $k$-digit square}
+$[0,b^k)^2$ --- on the peak line this square is exactly the reachable bounding
+box; the unrestricted allowed set is infinite, so the qualification is needed
+--- decays as $c_b/\sqrt{N}$ with
 \[
 c_b\;=\;\frac{2\sqrt{b-1}}{\sqrt{\pi}}\,
 \exp\!\Bigl(\tfrac12\sum_{n\ge1}\frac{p_n}{n}\Bigr)
@@ -267,7 +271,12 @@ tent characteristic function --- the Wiener--Hopf factorization constant of the
 tent kernel. In base $2$, $\sum_n p_n/n=\sum_n\binom{2n}{n}4^{-n}/n=2\log2$
 gives $c_2=4/\sqrt{\pi}$ in closed form; in base $10$,
 $c_{10}=3.847174895\ldots$, and $c_3=2.478093$, $c_4=2.705016$,
-$c_5=2.921639$, each matching independent walk-DP extrapolations.
+$c_5=2.921639$, each matching independent walk-DP extrapolations. (The
+endpoint constraint $\ge1$ rather than $\ge0$ is immaterial: nonnegative walks
+ending exactly at $0$ have probability $O(k^{-3/2})$ --- the endpoint density
+of a walk conditioned to stay nonnegative is Rayleigh-type and vanishes
+linearly at the origin --- hence contribute $o(k^{-1/2})$ and do not affect
+$c_b$.)
 \end{corollary}
 
 \begin{corollary}[Base 2]\label{cor:base2}
@@ -293,15 +302,25 @@ and $k-2$ --- the top two layers --- and the Garsia--Milne chase of the
 reflection collapses to an explicit \emph{surfacing map}: while $w$ has
 $\le k-3$ ones, complement the prefix up to and including the first hitting
 time of level $-2$ (each round adds two ones); the inverse complements prefixes
-up to first hits of $+2$. Bijectivity was verified exhaustively for $k\le7$.
+up to first hits of $+2$. Bijectivity follows from a round-inversion lemma: if
+a path first hits $-2$ at time $j$, its values before $j$ are $\ge-1$, so the
+flipped path's values are $\le+1$ before $j$ and $+2$ at $j$ --- its first
+$+2$-hit is exactly $j$ --- and complementing the same prefix restores the
+original (symmetrically for the inverse direction). Hence each surfacing round
+is undone by exactly one sinking round; both loops terminate by strict weight
+monotonicity in steps of two, and the stopping rules pair up by weight parity
+(surfacing halts at exactly one of $k-1$, $k-2$, determined by the starting
+weight mod $2$). Verified exhaustively for $k\le7$ in addition.
 \end{proof}
 
 \begin{remark}
 The collapse is a parity accident of binary: base-$2$ digits give two-valued
 $\pm1$ half-steps, so even-time positions have fixed parity and the
 checkpointed condition becomes a uniform barrier. For $b\ge3$ the half-steps
-take $b$ values, no parity constraint survives, and no binomial closed form
-exists --- consistent with $c_b$ of Corollary~\ref{cor:asym} being a genuinely
+take $b$ values and no parity constraint survives, so this mechanism is
+unavailable; no binomial closed form is known (computationally, the sequences
+are neither C-finite nor small-holonomic per residue class, though nonexistence
+is not proved) --- consistent with $c_b$ of Corollary~\ref{cor:asym} being a
 transcendental-looking factorization constant.
 \end{remark}
 

@@ -102,10 +102,35 @@ def integral_g(b):
     return -(I1 + I2) / pi
 
 
+def excursion_check(b, kmax=2000):
+    """The endpoint-zero excursions r_k = P(stay >= 0, end = 0) must be
+    o(k^{-1/2}) for the endpoint condition (>=1 vs >=0) not to affect c.
+    Standard meander local-limit theory gives r_k ~ const * k^{-3/2}; verify
+    r_k * k^{3/2} is bounded and settling."""
+    pmf = tent_pmf(b)
+    B = b - 1
+    span = B * (kmax + 1) + 1
+    W = np.zeros(span)
+    W[0] = 1.0
+    vals = {}
+    for k in range(1, kmax + 1):
+        W = np.convolve(W, pmf)[B: B + span]
+        if k in (kmax // 4, kmax // 2, kmax):
+            vals[k] = W[0] * k ** 1.5
+    return vals
+
+
 if __name__ == "__main__":
     print("Sparre Andersen identity vs barrier DP (max coefficient error):")
     for b in (2, 10):
         print(f"  base {b}: {sa_check(b):.2e}")
+
+    print("endpoint-zero excursions r_k * k^(3/2) (bounded => o(k^-1/2), "
+          "endpoint condition immaterial):")
+    for b in (2, 10):
+        vals = excursion_check(b)
+        print(f"  base {b}: " + ", ".join(f"k={k}: {v:.4f}"
+                                          for k, v in sorted(vals.items())))
 
     print(f"\n{'b':>3} {'g (series)':>12} {'g (integral)':>12} "
           f"{'c_b (formula)':>13} {'c_b (DP extrap)':>15}")

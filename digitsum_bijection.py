@@ -14,6 +14,15 @@ each verified exhaustively here:
    2 ones; the map lands bijectively on the words with exactly k-1 or k-2 ones
    — the allowed cells of the top two elevation layers. Inverse: while the walk
    touches +2, complement the prefix up to the first +2-hit.
+
+Bijectivity is PROVED by a round-inversion lemma, not just tested: if a path
+first hits -2 at time j, its pre-j values are >= -1, so the flipped path's
+pre-j values are <= +1 with +2 at j — its first +2-hit is exactly j — and
+complementing the same prefix restores the original (symmetrically the other
+way). Each surfacing round is undone by one sinking round; both loops
+terminate by strict weight monotonicity in steps of 2, and the stopping rules
+pair by weight parity (surfacing halts at exactly one of k-1, k-2). The
+exhaustive checks below confirm the lemma's bookkeeping on all 4^k words.
 """
 
 from math import comb

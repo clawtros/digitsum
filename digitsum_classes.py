@@ -10,8 +10,10 @@ ladder T = 1-d-9m, m >= 0 (m = number of ancestral walls the feed has passed
 through), plus empty. Class counts per d are (rungs+1)^2 - 1: 3, 8, 15, 24, ...
 — the historical "24" was the 3-level signature truncation's shadow.
 
-This script renders representative tanks (scale 3, exact flood) for the class
-families at d = 1, 0, -8. Output: digitsum_classes.png.
+This script first RE-VERIFIES the three facts (run with --verify; uses the
+census instrumentation of digitsum_spectral, ~a minute), then renders
+representative tanks (scale 3, exact flood) for the class families at
+d = 1, 0, -8. Output: digitsum_classes.png.
 """
 
 import numpy as np
@@ -81,7 +83,52 @@ def panel(d, TL, TB):
     return im
 
 
+def verify(N=260):
+    """Re-run the three exact front-class validations on the census at N."""
+    import digitsum_spectral as SP
+    from collections import defaultdict
+    SP.census(N)
+
+    cache = {}
+    def pat_scanline(k, T):
+        if T < 0:
+            return SP.pat_empty(k)
+        if (k, T) not in cache:
+            if k == 1:
+                cache[(k, T)] = SP._mk(1, (1 << min(T + 1, 10)) - 1)
+            else:
+                cache[(k, T)] = SP._mk(k, tuple(pat_scanline(k - 1, T - c)
+                                                for c in range(10)))
+        return cache[(k, T)]
+
+    fronts = set()
+    for (k, K, EL, EB) in SP.CHILDREN:
+        fronts.add((k, EL))
+        fronts.add((k, EB))
+    for (k, f) in fronts:
+        assert SP._minpos[f] is None or any(
+            pat_scanline(k, T) == f for T in range(0, 9 * k + 1)), "non-scanline!"
+    print(f"1. all {len(fronts)} census fronts are scanline sets: OK")
+
+    for (k, K, EL, EB), (_, ER, ET) in SP._memo.items():
+        want = pat_scanline(k, K - 9 * k)
+        assert ER == want and ET == want, "exit law violated!"
+    print(f"2. exit law ER = ET = scanline(-d) on all {len(SP._memo)} states: OK")
+
+    by_kK = defaultdict(set)
+    for (k, K, EL, EB), (total, _, _) in SP._memo.items():
+        if not (SP._minpos[EL] is None and SP._minpos[EB] is None):
+            by_kK[(k, K)].add(total)
+    assert all(len(v) == 1 for v in by_kK.values()), "class-dependent count!"
+    print(f"3. interior counts class-independent in all {len(by_kK)} "
+          f"(k,K) groups: OK")
+
+
 if __name__ == "__main__":
+    import sys
+    if "--verify" in sys.argv:
+        verify()
+
     def label(T):
         return "∅" if T is None else str(T)
 
