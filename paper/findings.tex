@@ -407,8 +407,31 @@ condition collapses by parity to a uniform barrier, reflection telescopes the
 count, and the surfacing map gives an explicit bijection onto the top two
 weight layers. The collapse is a parity accident of binary --- the structural
 reason no analogue exists for $b\ge3$.
-\item The full two-dimensional geometry (which cells flood \emph{within} a tank)
-retains the $24$-class transfer structure; characterize its fixed point.
+\item \emph{(Resolved.)} The ``$24$-class'' structure of the 2-D flood is fully
+characterized (Figure~\ref{fig:classes}): every wetting front is a
+\emph{scanline set} $\{v:\ds(v)\le T\}$ (all $142$ census fronts, by
+hash-cons identity); any fed tank exits $\mathrm{scanline}(-d)$ on both edges
+($96{,}202/96{,}202$ states; provable from the criterion applied inside the
+tank --- the prefix condition is implied by the endpoint condition); occupied
+entry thresholds form the ladder $T=1-d-9m$ ($m$ = ancestral walls crossed),
+giving $(m_{\max}{+}2)^2-1=3,8,15,24,\dots$ classes per offset --- the
+historical ``24'' being the signature truncation's shadow; and the classes are
+\emph{dynamically inert}: interior flooded counts never depend on the class
+($1{,}909/1{,}909$ groups), since scanlines contain the corner and the corner
+floods everything. The effective state is $(d,\text{fed?})$; every fed tank
+wears the canonical $d$-flood; and this is, in hindsight, \emph{why} counting
+collapsed to the scalar walk.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{digitsum_classes.png}
+\caption{The front classes of the 2-D flood, rendered as exact scale-3 floods
+(blue: flooded; slate: allowed but dry; orange: entry fronts, always scanline
+sets with thresholds on the ladder $T=1-d-9m$). Within each row (fixed $d$)
+the entries differ but the flood is identical --- the classes are provenance
+labels with no dynamical effect.}
+\label{fig:classes}
+\end{figure}
 \item Submit $f(N)$ (and the peak-line $Q$ data) to OEIS.
 \end{enumerate}
 
