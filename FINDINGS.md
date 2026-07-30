@@ -238,7 +238,7 @@ First execution of that program (`digitsum_spectral.py`): instrument the flood r
 
 1. **The fixed point is exactly attained, not just approached.** The normalized shallow census is *identical* — exact integer equality, state by state — across every peak-line N tested (116 to 404), at every instrumented depth. The crown of the hierarchy is perfectly self-similar under the decade shift; all N-dependence lives in the deepening diffusive interior. Census sizes per depth: 1, 27, 96, 226, 435 states (55, 4180, 350317, 30748795 tank instances).
 2. **The state family closes.** Transitions are well-defined functions of the truncated-signature classes (577 of 651 classes unambiguous; the 74 failures all sit at d ≤ −35 — deeply submerged near-full tanks that a truncation absorbs anyway). Classes per waterline offset max out at **24** and stop growing. Bonus: the active band is **one-sided** — no active tank ever has d > 1; everything above the waterline is dry.
-3. **The spectrum trends toward ρ but is truncation-limited.** The tank-count transfer matrix on the unambiguous states gives λ₁ → 95.2 (climbing toward the trivial 100 as the d-band widens) and λ₂/λ₁ = 0.577 → 0.777 → **0.860** as truncation depth grows — rising toward the observed ρ ≈ 0.91 but saturating at the depth our SHALLOW=6 instrumentation reaches, i.e. limited by data, not by the trend.
+3. **The spectrum trends toward ρ but is truncation-limited.** The tank-count transfer matrix on the unambiguous states gives λ₁ → 95.2 (climbing toward the trivial 100 as the d-band widens) and λ₂/λ₁ = 0.577 → 0.777 → **0.860** as truncation depth grows — rising toward the observed ρ ≈ 0.91 but saturating at the depth our SHALLOW=6 instrumentation reaches, i.e. limited by data, not by the trend. *(Interpretation later withdrawn: the ρ ≈ 0.91 in c_N turned out to be a power-family fitting artifact, not an eigenvalue — see "The ρ ≈ 0.91 mystery, resolved". The matrix gap itself remains a genuine property of the tank-count operator.)*
 
 Verdict: the spectral framework is viable and two of its three pillars are now *exact empirical facts* (fixed point, closure). The remaining work is real mathematics: instrument deeper (the band widens like √depth, so memory grows fast), and treat the diffusive d-walk properly — a Markov-additive process whose continuum spectrum is precisely the power-law correction family that fought the geometric term in the c hunt. The 24-classes-per-offset operator with a one-sided boundary at d = 1 is now a concrete, finitely-presented object; c and ρ are functionals of it.
 
@@ -305,6 +305,24 @@ Three moves (`digitsum_bijection.py`, all verified exhaustively for k = 2..7):
 
 And the dream-outcome question — why base 2 and only base 2 — gets a sharp answer: the parity collapse works because base-2 digits give *two-valued* (±1) half-steps, whose even-time values have fixed parity. For b ≥ 3 the interleaved half-steps take b values, even-time positions have no parity constraint, and the checkpoint condition is genuinely checkpointed — no uniform barrier, no reflection, no binomial. That is the structural reason the base-10 constant is a transcendental-looking Wiener–Hopf integral while base 2's is a binomial: **the collapse is exactly a parity accident of binary.**
 
+## The ρ ≈ 0.91 mystery, resolved: there was never a geometric
+
+The last open problem asked for the per-decade correction ratio ρ ≈ 0.91 from the factorization's subleading structure. The answer is a **retraction with an explanation** (`digitsum_rho.py`):
+
+The exact correction structure of c_k is a pure power family,
+
+```
+c_k = c · (1 + α/√k + β/k + γ/k^{3/2} + …),   α = 1/(σ√(2π)) = 0.098213…
+```
+
+with α forced by the *denominator alone* (the lattice atom P(S_k = 0) in the allowed-count normalization; in base 2 this is the known exact 1/√π). Fitted with α pinned to theory: β = −0.4147, and the family reproduces the exact c_k to **rms 9×10⁻¹²** over k ∈ [300, 1500] and extrapolates out-of-window to 2.5×10⁻⁶. There is no geometric term. Three confirmations:
+
+1. **The crest is a two-term power phenomenon**: α > 0, β < 0 gives a maximum at k* = (2|β|/α)² = 71 — observed argmax k = 73 (N = 656, c_crest = 3.869324, our historical 3.86931).
+2. **The masquerade, reproduced exactly**: replaying the historical single-geometric fit on the historical window q ∈ [28, 69] against the pure power family returns ρ = 0.9153, rms 1.6×10⁻⁵ — the very numbers (0.9153, 1.65×10⁻⁵) that launched the "subleading eigenvalue" interpretation. A geometric fitted to α/√k + β/k over a finite window lands at ~0.91 by arithmetic, not spectroscopy.
+3. **The true subleading singularity** of the SA generating function comes from the first *side lobe* of the tent kernel: ratio φ* = 0.0505 per step (singularity at z ≈ 19.8) — a genuine geometric so small it never influences anything.
+
+Accordingly, the spectral-expedition reading of λ₂/λ₁ → 0.86 as "trending toward ρ ≈ 0.91" is **withdrawn**: the transfer-matrix gap is a real property of the tank-count operator, but it is not the source of c_N's corrections — consistent, in hindsight, with the shallow census being *exactly* stationary (convergence there is instant, not geometric). With this, every open problem about the constant is closed: value (Wiener–Hopf integral), leading correction (α = 1/(σ√2π)), crest (k* = (2|β|/α)²), and the historical ρ (an artifact, now understood).
+
 ## OEIS status
 
 The sequence f(N) = 5, 13, 25, 41, 61, 85, 113, 145, 505, 1121, 2025, 3245, 4805, 6725, 9021, 11705, 14785, 47905, 102485, 181533, 287881, 424129, … is **not in OEIS** as of July 2026 (searched the full subsequence and the standalone value 102485). Worth submitting.
@@ -333,5 +351,7 @@ All in this directory. Each writes its output PNG(s) into cwd.
 | `digitsum_criterion.py`     | (stdout) THE reachability criterion: validation + exact walk-DP counts + c |
 | `digitsum_wh_constant.py`   | (stdout) the Wiener–Hopf closed form for c: SA identity check, series + integral |
 | `digitsum_glossary.py`      | `digitsum_glossary.png` — annotated tank/wall/weir/wetting-front strip at N=19 |
+| `digitsum_bijection.py`     | (stdout) parity collapse, reflection proof, surfacing-map bijection (base 2) |
+| `digitsum_rho.py`           | (stdout) exact correction structure of c_k; the ρ ≈ 0.91 masquerade resolved |
 
 Run with `.venv-digitsum/bin/python digitsum_<name>.py`. The directed-reachability DP lives in `digitsum_lib.py` (`monotone_quadrant` / `monotone_reach_count`).

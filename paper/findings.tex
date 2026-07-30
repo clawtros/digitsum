@@ -314,8 +314,11 @@ deeply submerged $d\le-35$); classes per offset saturate at $24$. The active ban
 is one-sided: no active tank has $d>1$.
 \item \textbf{Spectrum.} The truncated transfer matrix gives $\lambda_1\to95.2$
 (toward the trivial $100$) and $\lambda_2/\lambda_1$ rising
-$0.58\to0.78\to0.86$ with truncation depth, toward the observed per-decade
-correction ratio ${\sim}0.91$ --- data-limited, not trend-limited.
+$0.58\to0.78\to0.86$ with truncation depth. \emph{(The interpretation of this as
+approaching the observed correction ratio ${\sim}0.91$ was later withdrawn: the
+$0.91$ in $c_N$ is a power-family fitting artifact, not an eigenvalue --- see
+\S\ref{sec:rho}. The matrix gap itself remains a genuine property of the
+tank-count operator.)}
 \end{enumerate}
 
 The $d$-walk steps by $(i+j)-9$ per scale: a Markov-additive process whose
@@ -357,14 +360,47 @@ explicit (if unlovely) analytic characterization; and the $24$-class front
 dynamics of \S\ref{sec:spectral}, while real as $2$-D geometry, is
 count-irrelevant --- reachability depends only on ancestor budgets.
 
+\section{The \texorpdfstring{$\rho\approx0.91$}{rho = 0.91} structure: a
+masquerade}\label{sec:rho}
+
+The criterion makes $c_k$ exactly computable, and its correction structure is a
+pure power family
+\[
+c_k \;=\; c\,\Bigl(1+\frac{\alpha}{\sqrt{k}}+\frac{\beta}{k}
++\frac{\gamma}{k^{3/2}}+\cdots\Bigr),
+\qquad \alpha=\frac{1}{\sigma\sqrt{2\pi}}=0.098213\ldots,
+\]
+with $\alpha$ forced by the denominator alone (the lattice atom
+$\Pr(S_k{=}0)$ in the allowed-count normalization; $1/\sqrt{\pi}$ exactly in
+base~2). With $\alpha$ pinned to theory, fitting $\beta=-0.4147$ (and two
+higher terms) reproduces the exact $c_k$ to rms $9\times10^{-12}$ on
+$k\in[300,1500]$ and extrapolates out-of-window to $2.5\times10^{-6}$. There is
+no geometric term. Three confirmations: the crest is the two-term power
+phenomenon $k^*=(2|\beta|/\alpha)^2=71$ (observed $73$, $N=656$); refitting a
+single geometric on the historical window $q\in[28,69]$ returns
+$\rho=0.9153$ at rms $1.6\times10^{-5}$ --- precisely the numbers that launched
+the ``subleading eigenvalue'' reading, now identified as arithmetic rather than
+spectroscopy; and the \emph{true} subleading singularity of the Sparre Andersen
+generating function, from the first side lobe of the tent kernel, has ratio
+$\varphi^*=0.0505$ per step (singularity at $z\approx19.8$) --- a genuine
+geometric far too small to ever matter. The $\lambda_2/\lambda_1$ reading of
+\S\ref{sec:spectral} is accordingly withdrawn; in hindsight the exactly
+stationary shallow census already said the convergence was not geometric.
+
 \section{Open problems}
 
 \begin{enumerate}
 \item \emph{(Resolved.)} $c_b$ is extracted in closed form in \S\ref{sec:c}:
 the Sparre Andersen/Wiener--Hopf constant of the tent kernel, exact in base 2
-and $c_{10}=3.847174895\ldots$ in base 10. Still open from this direction: the
-per-decade correction ratio ${\sim}0.91$ from the factorization's subleading
-structure.
+and $c_{10}=3.847174895\ldots$ in base 10. The per-decade correction ratio
+${\sim}0.91$ is resolved in \S\ref{sec:rho}: not an eigenvalue but a
+finite-window artifact of the exact power family
+$c_k=c\,(1+\alpha k^{-1/2}+\beta/k+\cdots)$, $\alpha=1/(\sigma\sqrt{2\pi})$,
+$\beta=-0.4147$, which reproduces $c_k$ to $9\times10^{-12}$, predicts the
+crest at $k^*=(2|\beta|/\alpha)^2=71$ (observed $73$), and --- refit with a
+single geometric on the historical window --- returns exactly the historical
+$\rho=0.9153$. The true subleading singularity (the tent kernel's first side
+lobe) has ratio $0.0505$ per step: invisible.
 \item \emph{(Resolved.)} $Q_2(N)=\binom{2N+3}{N}$ is proved from the
 criterion's interleaved-bit walk (\S\ref{sec:base2}): the even-checkpoint
 condition collapses by parity to a uniform barrier, reflection telescopes the
