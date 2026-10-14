@@ -39,7 +39,7 @@ $Q(N)=\binom{2N+3}{N}$; a carry-free self-similar (``gastank'') decomposition
 giving a polynomial-time exact solver; the asymptotic law
 $\mathrm{reachable}/\mathrm{allowed\ in\ box}\sim c/\sqrt{N}$ with $c=3.84717(5)$
 (refuting a tempting $\sqrt{15}$); and finally an exact two-line reachability
-criterion, proved in a companion paper, which subsumes every structure met along
+criterion, proved in a companion paper~\cite{criterion}, which subsumes every structure met along
 the way and reduces all counting to a one-dimensional walk recursion. We keep the
 narrative in expedition order, including two instructive false summits.
 \end{abstract}
@@ -87,7 +87,7 @@ threshold.}
 \label{fig:signal}
 \end{figure}
 
-\section{The staircase in \texorpdfstring{$N$}{N}}
+\section{The staircase in \texorpdfstring{$N$}{N}}\label{sec:staircase}
 
 Exact counts as $N$ grows show a descending, Cantor-like pattern in the ratio
 $f(N)/\text{allowed-in-box}$, with cliffs exactly at $N\in\{9,18,27,36\}$ --- the
@@ -134,7 +134,7 @@ made visible.}
 \label{fig:peaktrough}
 \end{figure}
 
-\section{The monotone lemma}
+\section{The monotone lemma}\label{sec:monotone}
 
 A BFS-depth experiment found \emph{detour} $:=$ geodesic $-\;(|x|+|y|)$ to vanish
 on every reachable cell: whatever is reachable at all is reachable by a monotone
@@ -338,7 +338,7 @@ surviving below the census barrier $d\le1$ --- reproduced base 2's constant to
 $4\times10^{-5}$ with no fitted parameters. Testing whether the model is
 \emph{literally} true:
 
-\begin{theorem}[Reachability criterion; proof in the companion paper]
+\begin{theorem}[Reachability criterion; proof in \cite{criterion}]
 In base $b$, threshold $N$, $k=\lfloor N/(b{-}1)\rfloor+1$: a quadrant cell
 $(x,y)$ is reachable iff every proper digit-prefix pair
 \emph{(lengths $1\le s<k$)} satisfies
@@ -398,54 +398,80 @@ geometric far too small to ever matter. The $\lambda_2/\lambda_1$ reading of
 \S\ref{sec:spectral} is accordingly withdrawn; in hindsight the exactly
 stationary shallow census already said the convergence was not geometric.
 
-\section{Open problems}
+\section{From expedition to proof}\label{sec:outlook}
 
-\begin{enumerate}
-\item \emph{(Resolved.)} $c_b$ is extracted in closed form in \S\ref{sec:c}:
-the Sparre Andersen/Wiener--Hopf constant of the tent kernel, exact in base 2
-and $c_{10}=3.847174895\ldots$ in base 10. The per-decade correction ratio
-${\sim}0.91$ is resolved in \S\ref{sec:rho}: not an eigenvalue but a
-finite-window artifact of the power family
-$c_k=c\,(1+\alpha k^{-1/2}+\beta/k+\cdots)$, $\alpha=1/(\sigma\sqrt{2\pi})$,
-$\beta=-0.4147$, which reproduces $c_k$ to $9\times10^{-12}$, predicts the
-crest at $k^*=(2|\beta|/\alpha)^2=71$ (observed $73$), and --- refit with a
-single geometric on the historical window --- returns exactly the historical
-$\rho=0.9153$. The true subleading singularity (the tent kernel's first side
-lobe) has ratio $0.0505$ per step: invisible.
-\item \emph{(Resolved.)} $Q_2(N)=\binom{2N+3}{N}$ is proved from the
-criterion's interleaved-bit walk (\S\ref{sec:base2}): the even-checkpoint
-condition collapses by parity to a uniform barrier, reflection telescopes the
-count, and the surfacing map gives an explicit bijection onto the top two
-weight layers, proved by a round-inversion lemma (the flipped word's first
-$+2$-hit occurs at the same position, so sinking undoes surfacing round by
-round) and verified exhaustively for $k\le7$. The collapse is a parity accident of binary --- the structural
-reason no analogue exists for $b\ge3$.
-\item \emph{(Resolved.)} The ``$24$-class'' structure of the 2-D flood is fully
-characterized (Figure~\ref{fig:classes}): every wetting front is a
-\emph{scanline set} $\{v:\ds(v)\le T\}$ (all $142$ census fronts, by
-hash-cons identity); any fed tank exits $\mathrm{scanline}(-d)$ on both edges
-($96{,}202/96{,}202$ states; provable from the criterion applied inside the
-tank --- the prefix condition is implied by the endpoint condition); occupied
-entry thresholds form the ladder $T=1-d-9m$ ($m$ = ancestral walls crossed),
-giving $(m_{\max}{+}2)^2-1=3,8,15,24,\dots$ classes per offset --- the
-historical ``24'' being the signature truncation's shadow; and the classes are
-\emph{dynamically inert}: interior flooded counts never depend on the class
-($1{,}909/1{,}909$ groups), since scanlines contain the corner and the corner
-floods everything. The effective state is $(d,\text{fed?})$; every fed tank
-wears the canonical $d$-flood; and this is, in hindsight, \emph{why} counting
-collapsed to the scalar walk.
+This report stops deliberately at the \emph{statement} of the criterion
+(\S\ref{sec:criterion}). Its proof, and the corollaries that follow from it,
+are the subject of the companion paper \cite{criterion}, which is written in the
+conventional order --- setting, theorem, necessity, sufficiency, corollaries ---
+that the expedition did not follow. The two documents are meant to be read
+together, and the correspondence between them is close enough to tabulate:
+every structure met along the way reappears in \cite{criterion} as a
+consequence of the two-line test.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{digitsum_classes.png}
-\caption{The front classes of the 2-D flood, rendered as exact scale-3 floods
-(blue: flooded; slate: allowed but dry; orange: entry fronts, always scanline
-sets with thresholds on the ladder $T=1-d-9m$). Within each row (fixed $d$)
-the entries differ but the flood is identical --- the classes are provenance
-labels with no dynamical effect.}
-\label{fig:classes}
-\end{figure}
-\item Submit $f(N)$ (and the peak-line $Q$ data) to OEIS.
-\end{enumerate}
+\begin{center}
+\begin{tabular}{@{}ll@{}}
+\toprule
+This report & Companion paper \cite{criterion} \\
+\midrule
+Axis cliffs and the staircase in $N$ (\S\ref{sec:staircase})
+  & the budget inequality at the leading digit \\
+Monotone lemma (\S\ref{sec:monotone})
+  & Corollary (Monotone-staircase lemma) \\
+Base-2 closed form $\binom{2N+3}{N}$ (\S\ref{sec:base2})
+  & Corollary (Base 2): reflection and the surfacing map \\
+Gastank solver (\S\ref{sec:tanks})
+  & Corollary (Exact counting): the tent-weight walk \\
+The constant $c$ (\S\ref{sec:c})
+  & Corollary (Asymptotics): the Wiener--Hopf constant \\
+Spectral reading of $\rho$ (\S\ref{sec:spectral}, \S\ref{sec:rho})
+  & no counterpart: a finite-window artifact \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Read down the right-hand column, the proof paper is short because the
+criterion does the work once. The cliffs at multiples of $9$ are the budget
+inequality evaluated at the leading digit, where one unit of slack decides the
+fate of a whole column. The monotone lemma, found by experiment and proved here
+by a local argument, becomes the statement that undirected, right/up, and
+criterion reachability coincide. The gastank recursion --- the first
+polynomial-time solver, arrived at by watching floods fill self-similar tanks
+--- is the one-dimensional walk over tent weights: the tank walls are the digit
+positions at which the walk is checkpointed, and the carry-free property is the
+reason the recursion closes. The constant $c$, which two false summits placed at
+$\sqrt{15}$ and then at a subleading eigenvalue, is the Wiener--Hopf
+factorization constant of the tent kernel, exact in base $2$ and
+$3.847174895\ldots$ in base $10$; the brute-force fits of \S\ref{sec:c} reached
+five of those digits. Only the spectral reading has no counterpart, because
+there was nothing to prove: \S\ref{sec:rho} shows the apparent ratio ${\sim}0.91$
+to be what a power series looks like through a window of nine decades.
+
+What the proof does not settle is also worth recording. For $b\ge3$ no closed
+form for $Q(N)$ is known; the search of \S\ref{sec:tanks} found no low-order
+C-finite or polynomial-coefficient recurrence per residue class, but
+nonexistence is not proved, and the transcendental-looking form of $c_b$
+suggests none should be expected. The correction family of \S\ref{sec:rho} has
+its leading coefficient $\alpha$ derived and its second coefficient $\beta$
+fitted; a derivation of $\beta$ from the Sparre Andersen generating function
+would close the account of $c_k$ entirely. And the base-$10$ sequence $f(N)$
+is not yet in the OEIS, although its base-$2$ quadrant cousin has been there
+for decades as A002054; a submission is prepared in the project repository.
+
+The order of presentation was a choice. Written theorem-first, this material
+is five pages; written as it happened, it is nine, and two of them are wrong.
+We have kept the longer version because the false summits were not detours
+from the criterion but the route to it: the $\sqrt{15}$ fit forced the
+precision that exposed the correction family, and the eigenvalue reading
+forced the spectral analysis whose failure made the Markov-additive structure
+--- and hence the criterion --- visible.
+
+\begin{thebibliography}{1}
+\bibitem{criterion}
+A.~Benzan, \emph{An exact reachability criterion for digit-sum--bounded lattice
+walks}, companion paper, July 2026. Distributed with this report as
+\texttt{criterion.pdf} in the project repository, together with the scripts and
+exact datasets.
+\end{thebibliography}
 
 \end{document}
