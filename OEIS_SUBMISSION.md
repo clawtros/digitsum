@@ -40,7 +40,7 @@ digitsum(|x|) + digitsum(|y|) <= n.
 
 **Formula:**
 a(n) = 4*Q(n) - 4*w(n) + 1, where Q(n) is the quadrant count (Sequence 2) and
-w(n) = (s+1)*10^q - 1 with n+1 = 9*q + s, 1 <= s <= 9, is the least integer
+w(n) = (r+1)*10^q - 1 with n+1 = 9*q + r, 1 <= r <= 9, is the least integer
 with digit sum n+1.
 
 **Example:**
@@ -68,8 +68,8 @@ def a(n, b=10):
                     nxt[d + m - B] = nxt.get(d + m - B, 0) + c * wm
         W = nxt
     Q = sum(W.values())
-    s0 = (n % B) + 1
-    wall = (s0 + 1) * b ** ((n + 1 - s0) // B) - 1
+    r = (n % B) + 1
+    wall = (r + 1) * b ** ((n + 1 - r) // B) - 1
     return 4 * Q - 4 * wall + 1
 ```
 
