@@ -1,14 +1,15 @@
 # OEIS submission draft: digit-sum reachability sequences
 
 Prepared from the digitsum project (see FINDINGS.md, PROOF.md, and paper/ in
-the repository). Two related sequences; the second is the quadrant version
+the repository). A-numbers A401129 (full plane) and A401130 (quadrant) were
+allocated 2026-10-15. Two related sequences; the second is the quadrant version
 whose base-2 analogue is already in the OEIS as A002054. Data verified by
 three independent programs (BFS, tank solver, criterion DP; integer equality).
 Feel free to trim comments to OEIS house style.
 
 ---
 
-## Sequence 1: full-plane reachable count
+## Sequence 1 (A401129): full-plane reachable count
 
 **Name:** a(n) is the number of lattice points (x, y) connected to the origin
 by a path of unit horizontal and vertical steps through points satisfying
@@ -36,10 +37,10 @@ digitsum(|x|) + digitsum(|y|) <= n.
   c = (6/sqrt(Pi)) * exp((1/2) * Sum_{m>=1} p_m/m) = 3.847174895...,
   with p_m the probability that a sum of 2m independent uniform digits equals
   9m (a Sparre Andersen / Wiener-Hopf constant).
-- The base-2 analogue of the quadrant version (Sequence 2) is A002054.
+- The base-2 analogue of the quadrant version A401130 is A002054.
 
 **Formula:**
-a(n) = 4*Q(n) - 4*w(n) + 1, where Q(n) is the quadrant count (Sequence 2) and
+a(n) = 4*A401130(n) - 4*w(n) + 1, where
 w(n) = (r+1)*10^q - 1 with n+1 = 9*q + r, 1 <= r <= 9, is the least integer
 with digit sum n+1.
 
@@ -73,14 +74,14 @@ def a(n, b=10):
     return 4 * Q - 4 * wall + 1
 ```
 
-**Crossrefs:** A007953 (digit sum), A002054 (base-2 quadrant analogue),
-Sequence 2 below.
+**Crossrefs:** A401130 (quadrant version), A002054 (base-2 quadrant
+analogue), A007953 (digit sum).
 
 **Keywords:** nonn, base, walk
 
 ---
 
-## Sequence 2: quadrant reachable count
+## Sequence 2 (A401130): quadrant reachable count
 
 **Name:** a(n) is the number of lattice points (x, y) with x, y >= 0 connected
 to the origin by a path of unit steps through points of the first quadrant
@@ -95,14 +96,15 @@ satisfying digitsum(x) + digitsum(y) <= n.
 7188327486499, 10126506243476, 13710262816822, 17988292277865, 23004329420040, 74312310753556, 159428313739802, 283975923798831, 453606512326467, 673904384659102, 950290797504473, 1287929185744999, 1691633917678173, 2165784809170181, 6999810433761324
 
 **Comments:**
-- Quadrant version of Sequence 1: full-plane count = 4*a(n) - 4*w(n) + 1 with
-  w(n) the least integer with digit sum n+1.
+- Quadrant version of A401129: A401129(n) = 4*a(n) - 4*w(n) + 1 with w(n) the
+  least integer with digit sum n+1.
 - In base 2 the same construction gives binomial(2n+3, n) = A002054(n+1)
   exactly, via a reflection argument on the interleaved-bit walk.
-- Same reachability criterion and program as Sequence 1 (drop the final
-  full-plane conversion).
+- Same reachability criterion as A401129; the program below is the same walk
+  DP without the final full-plane conversion.
 
-**Crossrefs:** A002054, A007953, Sequence 1 above.
+**Crossrefs:** A401129 (full-plane version), A002054 (base-2 analogue),
+A007953 (digit sum).
 
 **Keywords:** nonn, base, walk
 
@@ -110,7 +112,7 @@ satisfying digitsum(x) + digitsum(y) <= n.
 
 ## b-file data (n = 1..100)
 
-### Sequence 1 (full plane)
+### Sequence 1 (A401129, full plane)
 
 1 5
 2 13
@@ -213,7 +215,7 @@ satisfying digitsum(x) + digitsum(y) <= n.
 99 24199370912546895594501
 100 52005222777213037743661
 
-### Sequence 2 (quadrant)
+### Sequence 2 (A401130, quadrant)
 
 1 3
 2 6

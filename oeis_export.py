@@ -2,8 +2,7 @@
 
 Writes oeis/submission.txt (one block per sequence, each form field on
 unwrapped lines, Data cut to the OEIS 260-character limit at a term boundary)
-and oeis/seq1_bfile.txt, oeis/seq2_bfile.txt (rename to b<A-number>.txt when
-the A-numbers are allocated).
+and the b-files oeis/b<A-number>.txt, named from the section headings.
 """
 
 import os
@@ -16,7 +15,8 @@ DATA_LIMIT = 260
 
 md = open(SRC, encoding="utf-8").read()
 body, bfiles = md.split("## b-file data")
-seqs = re.split(r"^## Sequence \d+: ", body, flags=re.M)[1:]
+seqs = re.split(r"^## Sequence \d+ \((A\d+)\): ", body, flags=re.M)[1:]
+seqs = [(seqs[i], seqs[i + 1]) for i in range(0, len(seqs), 2)]  # (A-number, text)
 bparts = re.split(r"^### Sequence \d+ ", bfiles, flags=re.M)[1:]
 
 
@@ -66,8 +66,10 @@ def cut_data(data):
 
 os.makedirs(OUT, exist_ok=True)
 blocks = []
-for i, sec in enumerate(seqs, 1):
-    title = sec.splitlines()[0].strip()
+anums = []
+for i, (anum, sec) in enumerate(seqs, 1):
+    anums.append(anum)
+    title = f"{anum}: " + sec.splitlines()[0].strip()
     f = fields(sec)
     data, nkept, ntotal = cut_data(f["Data"])
     if "Program (Python)" in f:
@@ -86,7 +88,7 @@ for i, sec in enumerate(seqs, 1):
         "[Offset]",
         f["Offset"],
         "",
-        f"[Data]  ({nkept} of {ntotal} terms; the rest are in seq{i}_bfile.txt)",
+        f"[Data]  ({nkept} of {ntotal} terms; the rest are in b{anum[1:]}.txt)",
         data,
         "",
         "[Comments]  (one comment per line)",
@@ -114,11 +116,12 @@ for i, sec in enumerate(seqs, 1):
 
 open(f"{OUT}/submission.txt", "w", encoding="utf-8").write(
     "OEIS submission text, generated from OEIS_SUBMISSION.md by oeis_export.py.\n"
-    "Replace 'Sequence 1'/'Sequence 2' in the crossrefs with the allocated A-numbers.\n\n"
+"\n"
     + "".join(blocks))
 
 for i, part in enumerate(bparts, 1):
     rows = re.findall(r"^(\d+) (\d+)$", part, re.M)
-    open(f"{OUT}/seq{i}_bfile.txt", "w").write("".join(f"{n} {v}\n" for n, v in rows))
-    print(f"seq{i}_bfile.txt: {len(rows)} rows")
+    name = f"b{anums[i - 1][1:]}.txt"
+    open(f"{OUT}/{name}", "w").write("".join(f"{n} {v}\n" for n, v in rows))
+    print(f"{name}: {len(rows)} rows")
 print("wrote", f"{OUT}/submission.txt")
