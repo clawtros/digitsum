@@ -9,6 +9,9 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \graphicspath{{../}}
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\floatpagefraction}{0.8}
+\renewcommand{\textfraction}{0.1}
 \usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
 
 \newtheorem{theorem}{Theorem}
@@ -174,7 +177,7 @@ whose even-checkpoint constraint collapses, by parity, to the uniform barrier
 $\binom{2k}{k-1}+\binom{2k}{k-2}$ --- the allowed cells of the top two weight
 layers, with an explicit \emph{surfacing map} bijection (complement prefixes up
 to first hits of level $-2$). The allowed-set side is classical,
-$\bigl(4^{N+1}-\binom{2N+2}{N+1}\bigr)/2$, so the island count is closed-form by
+$\tfrac12\bigl(4^{N+1}-\binom{2N+2}{N+1}\bigr)$, so the island count is closed-form by
 subtraction, and
 \[
 \frac{Q_2(N)}{\text{allowed}}\;\longrightarrow\;\frac{4}{\sqrt{\pi N}} .
@@ -378,15 +381,47 @@ c_k \;=\; c\,\Bigl(1+\frac{\alpha}{\sqrt{k}}+\frac{\beta}{k}
 +\frac{\gamma}{k^{3/2}}+\cdots\Bigr),
 \qquad \alpha=\frac{1}{\sigma\sqrt{2\pi}}=0.098213\ldots,
 \]
-with $\alpha$ \emph{derived} --- forced by the denominator alone (the lattice
-atom $\Pr(S_k{=}0)$ in the allowed-count normalization; $1/\sqrt{\pi}$ exactly
-in base~2) --- and the higher coefficients \emph{numerically fitted}: with
-$\alpha$ pinned to theory, $\beta=-0.4147$ (and two higher terms) reproduces
-the exact $c_k$ to rms $9\times10^{-12}$ on $k\in[300,1500]$ and extrapolates
-out-of-window to $2.5\times10^{-6}$. No geometric term is needed, and any
-admixture is bounded far below the historical claim; a first-principles
-derivation of $\beta$ from the Sparre Andersen generating function remains
-open. Three confirmations: the crest is the two-term power
+where $\sigma^2=(b^2-1)/6$ is the variance of a tent step, with $\alpha$
+forced by the denominator alone: the lattice atom $\Pr(S_k{=}0)$ in the
+allowed-count normalization $(1-p_k)/2$ ($1/\sqrt{\pi}$ exactly in base~2).
+The numerator contributes no $k^{-1/2}$ term: writing $w=1-z$ and
+$G(z)=\tfrac12\sum_n p_nz^n/n$, the Sparre Andersen generating function of the
+stay-nonnegative probabilities $q_k$ is $w^{-1/2}e^{G(z)}$, and since
+$p_n\sim\alpha n^{-1/2}$ the leading singular part of $G$ is
+$-\alpha\sqrt{\pi}\,w^{1/2}$, whose product with the prefactor is the analytic
+constant $w^{-1/2}\cdot w^{1/2}=1$, contributing nothing to $[z^k]$.
+
+Pushed one order further, the same expansion gives $\beta$ in closed form
+(\texttt{digitsum\_beta.py}). Let $K=e^{G(1)}$, so that
+$c_b=2\sqrt{b-1}\,K/\sqrt{\pi}$, and
+$\rho_1=\sum_{n\ge1}\bigl(p_n-\alpha n^{-1/2}\bigr)$, convergent since
+$p_n-\alpha n^{-1/2}=O(n^{-3/2})$. Expanding $\mathrm{Li}_{3/2}$ at $z=1$
+gives $G(z)=\log K-\alpha\sqrt{\pi}\,w^{1/2}
+-\tfrac12\bigl(\alpha\,\zeta(\tfrac12)+\rho_1\bigr)w+O(w^{3/2})$, and
+singularity analysis of $w^{-1/2}e^{G}$ yields
+$q_k=K(\pi k)^{-1/2}\bigl(1+u_1/k+O(k^{-2})\bigr)$ with
+$u_1=-\tfrac18+\tfrac14\bigl(\alpha\,\zeta(\tfrac12)+\rho_1\bigr)
+-\tfrac14\pi\alpha^2$. Reachability needs endpoint $\ge1$, so the endpoint
+atom $r_k=\Pr(S_1,\dots,S_{k-1}\ge0,\;S_k=0)$ is subtracted; by the
+Spitzer--Baxter identity its generating function is the $u^0$ coefficient of
+$\exp\sum_n\frac{z^n}{n}\,\mathbb{E}[u^{S_n};S_n\ge0]$, namely $e^{2G(z)}$
+(verified coefficientwise to $10^{-17}$; $C_{k+1}/4^k$ in base~2), so
+$r_k\sim K^2\alpha\,k^{-3/2}$. Assembling
+$c_k=2\sqrt{(b-1)k-1}\,(q_k-r_k)/(1-p_k)$ with
+$K\alpha\sqrt{\pi}=K/(\sigma\sqrt2)$,
+\[
+\beta\;=\;\Bigl(1-\frac{\pi}{4}\Bigr)\alpha^2-\frac{K}{\sigma\sqrt2}
+-\frac18-\frac{1}{2(b-1)}+\frac{\alpha\,\zeta(\frac12)+\rho_1}{4}.
+\]
+In base~2 everything is explicit ($K=2$, $G=\log\bigl(2/(1+\sqrt{w})\bigr)$,
+so $\alpha\zeta(\frac12)+\rho_1=-1$): $\beta_2=1/\pi-25/8=-2.80669\ldots$.
+In base~10 the formula gives $\beta=-0.414716$, and the power family fitted
+to the exact $c_k$ on $k\in[300,1500]$ with $\alpha$ pinned returns
+$-0.414716$; with $\alpha$ and $\beta$ both pinned, two fitted higher terms
+reproduce $c_k$ to rms $5\times10^{-11}$ and extrapolate out-of-window to
+$3.5\times10^{-6}$. No geometric term is
+needed, and any admixture is bounded far below the historical claim. Three
+confirmations: the crest is the two-term power
 phenomenon $k^*=(2|\beta|/\alpha)^2=71$ (observed $73$, $N=656$); refitting a
 single geometric on the historical window $q\in[28,69]$ returns
 $\rho=0.9153$ at rms $1.6\times10^{-5}$ --- precisely the numbers that launched
@@ -451,10 +486,11 @@ What the proof does not settle is also worth recording. For $b\ge3$ no closed
 form for $Q(N)$ is known; the search of \S\ref{sec:tanks} found no low-order
 C-finite or polynomial-coefficient recurrence per residue class, but
 nonexistence is not proved, and the transcendental-looking form of $c_b$
-suggests none should be expected. The correction family of \S\ref{sec:rho} has
-its leading coefficient $\alpha$ derived and its second coefficient $\beta$
-fitted; a derivation of $\beta$ from the Sparre Andersen generating function
-would close the account of $c_k$ entirely. And the base-$10$ sequence $f(N)$
+suggests none should be expected. The correction family of \S\ref{sec:rho} is
+now derived through order $1/k$ --- $\alpha$ from the lattice atom in the
+denominator, $\beta$ from the Sparre Andersen and Spitzer--Baxter expansions
+--- and only the coefficients from $k^{-3/2}$ on remain fitted. And the
+base-$10$ sequence $f(N)$
 is not yet in the OEIS, although its base-$2$ quadrant cousin has been there
 for decades as A002054; a submission is prepared in the project repository.
 
@@ -470,8 +506,7 @@ forced the spectral analysis whose failure made the Markov-additive structure
 \bibitem{criterion}
 A.~Benzan, \emph{An exact reachability criterion for digit-sum--bounded lattice
 walks}, companion paper, July 2026. Distributed with this report as
-\texttt{criterion.pdf} in the project repository, together with the scripts and
-exact datasets.
+\texttt{criterion.pdf} in the project repository.
 \end{thebibliography}
 
 \end{document}

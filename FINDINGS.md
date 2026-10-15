@@ -315,13 +315,17 @@ The correction structure of c_k is a power family,
 c_k = c · (1 + α/√k + β/k + γ/k^{3/2} + …),   α = 1/(σ√(2π)) = 0.098213…
 ```
 
-with α *derived* (it is forced by the denominator alone — the lattice atom P(S_k = 0) in the allowed-count normalization; in base 2 this is the known exact 1/√π). The higher coefficients are *numerically fitted*, not yet derived: with α pinned to theory, β = −0.4147 (γ, δ small), and the family reproduces the double-precision c_k values to **rms 9×10⁻¹²** over k ∈ [300, 1500] and extrapolates out-of-window to 2.5×10⁻⁶ — overwhelming evidence for the power form, with any geometric admixture bounded far below the historical claim, though a first-principles derivation of β from the SA generating function remains open. Three confirmations:
+with α *derived* (it is forced by the denominator alone — the lattice atom P(S_k = 0) in the allowed-count normalization; in base 2 this is the known exact 1/√π — while the numerator has no k^{−1/2} term: the leading singular part of the SA exponent G(z) = ½ Σ p_n zⁿ/n is −α√π (1−z)^{1/2}, which the prefactor (1−z)^{−1/2} turns into an analytic constant). **β is derived too** (`digitsum_beta.py`): expanding G to order (1−z) and subtracting the endpoint atom r_k = P(S_1..S_{k−1} ≥ 0, S_k = 0), whose generating function is e^{2G(z)} by the Spitzer–Baxter identity (so r_k ∼ K²α k^{−3/2}, K = e^{G(1)}), gives
+
+    β = (1 − π/4) α² − K/(σ√2) − 1/8 − 1/(2(b−1)) + (α ζ(½) + ρ₁)/4,   ρ₁ = Σ_n (p_n − α n^{−1/2}).
+
+In base 2 this is exactly β₂ = 1/π − 25/8 = −2.80669; in base 10 it gives β = −0.414716, which the fit to the exact c_k with α pinned reproduces to all six decimals (base 3: −1.442093 vs −1.442067). With α and β pinned, two fitted higher terms reproduce the double-precision c_k values to **rms 5×10⁻¹¹** over k ∈ [300, 1500] and extrapolate out-of-window to 3.5×10⁻⁶ — any geometric admixture is bounded far below the historical claim. Three confirmations:
 
 1. **The crest is a two-term power phenomenon**: α > 0, β < 0 gives a maximum at k* = (2|β|/α)² = 71 — observed argmax k = 73 (N = 656, c_crest = 3.869324, our historical 3.86931).
 2. **The masquerade, reproduced exactly**: replaying the historical single-geometric fit on the historical window q ∈ [28, 69] against the pure power family returns ρ = 0.9153, rms 1.6×10⁻⁵ — the very numbers (0.9153, 1.65×10⁻⁵) that launched the "subleading eigenvalue" interpretation. A geometric fitted to α/√k + β/k over a finite window lands at ~0.91 by arithmetic, not spectroscopy.
 3. **The true subleading singularity** of the SA generating function comes from the first *side lobe* of the tent kernel: ratio φ* = 0.0505 per step (singularity at z ≈ 19.8) — a genuine geometric so small it never influences anything.
 
-Accordingly, the spectral-expedition reading of λ₂/λ₁ → 0.86 as "trending toward ρ ≈ 0.91" is **withdrawn**: the transfer-matrix gap is a real property of the tank-count operator, but it is not the source of c_N's corrections — consistent, in hindsight, with the shallow census being *exactly* stationary (convergence there is instant, not geometric). With this, the questions about the constant are settled to the following statuses: value — derived (Wiener–Hopf integral); leading correction α — derived; β and the crest law — numerically established (β fitted, k* = (2|β|/α)² matching observation); the historical ρ — an artifact, now understood. Deriving β analytically is the one loose thread.
+Accordingly, the spectral-expedition reading of λ₂/λ₁ → 0.86 as "trending toward ρ ≈ 0.91" is **withdrawn**: the transfer-matrix gap is a real property of the tank-count operator, but it is not the source of c_N's corrections — consistent, in hindsight, with the shallow census being *exactly* stationary (convergence there is instant, not geometric). With this, the questions about the constant are settled to the following statuses: value — derived (Wiener–Hopf integral); leading correction α — derived; second correction β — derived (Sparre Andersen plus the Spitzer–Baxter endpoint atom), with the crest law k* = (2|β|/α)² matching observation; the historical ρ — an artifact, now understood. Only the coefficients from k^{−3/2} on remain fitted.
 
 ## The 2-D fixed point, resolved: scanline fronts, the 9-ladder, and inert classes
 
@@ -364,6 +368,7 @@ All in this directory. Each writes its output PNG(s) into cwd.
 | `digitsum_glossary.py`      | `digitsum_glossary.png` — annotated tank/wall/weir/wetting-front strip at N=19 |
 | `digitsum_bijection.py`     | (stdout) parity collapse, reflection proof, surfacing-map bijection (base 2) |
 | `digitsum_rho.py`           | (stdout) exact correction structure of c_k; the ρ ≈ 0.91 masquerade resolved |
+| `digitsum_beta.py`          | (stdout) the 1/k coefficient β in closed form; Spitzer–Baxter check; fit comparison |
 | `digitsum_classes.py`       | `digitsum_classes.png` — the front-class family: scanline entries, canonical d-floods |
 
 Run with `.venv-digitsum/bin/python digitsum_<name>.py`. The directed-reachability DP lives in `digitsum_lib.py` (`monotone_quadrant` / `monotone_reach_count`).

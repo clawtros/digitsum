@@ -125,8 +125,8 @@ Every reachable cell of the quadrant has $x,y<b^k$.
 \end{proposition}
 
 \begin{proof}
-Let $w$ be the least integer with $\ds(w)=N+1$; explicitly $w=(s+1)b^{q}-1$ where
-$N+1=Bq+s$, $1\le s\le B$, so $w<b^{k}$. Every cell of the column $x=w$ has
+Let $w$ be the least integer with $\ds(w)=N+1$; explicitly $w=(r+1)b^{q}-1$ where
+$N+1=Bq+r$, $1\le r\le B$, so $w<b^{k}$. Every cell of the column $x=w$ has
 $\ds(x)+\ds(y)\ge N+1$ and is forbidden; a quadrant path from the origin to any
 $x>w$ would have to occupy that column. Hence reachable cells have $x\le w-1<b^k$,
 and likewise for $y$.
@@ -257,10 +257,7 @@ $Q(N)\big/b^{2k}$ is the probability that the reflected tent walk stays
 nonnegative for $k$ steps and ends $\ge 1$. By the Sparre Andersen identity and
 the symmetry $\Pr(S_n\ge0)=\bigl(1+p_n\bigr)/2$ with $p_n=\Pr(S_n=0)$, the
 reachable fraction of the allowed cells \emph{of the $k$-digit square}
-$[0,b^k)^2$ --- the unrestricted allowed set is infinite, so the qualification
-is needed; on the peak line the square exceeds the reachable bounding box only
-by the row and column at coordinate $b^k-1$, which is forbidden (digit sum
-$N+1$), so the allowed counts agree --- decays as $c_b/\sqrt{N}$ with
+$[0,b^k)^2$ decays as $c_b/\sqrt{N}$ with
 \[
 c_b\;=\;\frac{2\sqrt{b-1}}{\sqrt{\pi}}\,
 \exp\!\Bigl(\tfrac12\sum_{n\ge1}\frac{p_n}{n}\Bigr)
@@ -270,7 +267,11 @@ c_b\;=\;\frac{2\sqrt{b-1}}{\sqrt{\pi}}\,
 \]
 where $\varphi_b(\theta)=\bigl(\sin(b\theta/2)/(b\sin(\theta/2))\bigr)^2$ is the
 tent characteristic function --- the Wiener--Hopf factorization constant of the
-tent kernel. In base $2$, $\sum_n p_n/n=\sum_n\binom{2n}{n}4^{-n}/n=2\log2$
+tent kernel. The restriction to the $k$-digit square is needed because the
+unrestricted allowed set is infinite, and it costs nothing: on the peak line
+the square exceeds the reachable bounding box only by the row and column at
+coordinate $b^k-1$, which are forbidden (digit sum $N+1$), so the allowed
+counts agree. In base $2$, $\sum_n p_n/n=\sum_n\binom{2n}{n}4^{-n}/n=2\log2$
 gives $c_2=4/\sqrt{\pi}$ in closed form; in base $10$,
 $c_{10}=3.847174895\ldots$, and $c_3=2.478093$, $c_4=2.705016$,
 $c_5=2.921639$, each matching independent walk-DP extrapolations. (The
