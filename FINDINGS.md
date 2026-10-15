@@ -2,7 +2,7 @@
 
 > Academic-style PDFs of this material live in `paper/`: `criterion.pdf` (the
 > proof paper, from PROOF.md) and `findings.pdf` (this document restructured as
-> an expedition report). Rebuild with `tectonic paper/<name>.tex`.
+> an expedition report). Rebuild with `make` (wraps `tectonic`; see the Makefile).
 
 ## The problem
 
