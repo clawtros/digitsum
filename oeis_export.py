@@ -99,6 +99,8 @@ for i, (anum, sec) in enumerate(seqs, 1):
         lines += ["[Formula]", unwrap(f["Formula"]), ""]
     if "Example" in f:
         lines += ["[Example]", unwrap(f["Example"]), ""]
+    if "Links" in f:
+        lines += ["[Links]  (one link per line, after the b-file line OEIS added)", unwrap(f["Links"]), ""]
     lines += [
         "[Program]",
         "(Python)",

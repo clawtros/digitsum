@@ -40,15 +40,17 @@ digitsum(|x|) + digitsum(|y|) <= n.
 - The base-2 analogue of the quadrant version A401130 is A002054.
 
 **Formula:**
-a(n) = 4*A401130(n) - 4*w(n) + 1, where
-w(n) = (r+1)*10^q - 1 with n+1 = 9*q + r, 1 <= r <= 9, is the least integer
-with digit sum n+1.
+a(n) = 4*A401130(n) - 4*A051885(n+1) + 1, where A051885(n+1) = (r+1)*10^q - 1
+with n+1 = 9*q + r, 1 <= r <= 9, is the least integer with digit sum n+1.
 
 **Example:**
 For n = 1 the reachable points are (0,0), (+-1,0), (0,+-1): a(1) = 5. The
 point (2,0) is not counted for n = 1 since digitsum(2) = 2 > 1; the point
 (300,0) is not counted for n = 19 despite digitsum(300) = 3, because every
 path to it must pass the column |x| = 299 whose digit sum 20 exceeds 19.
+
+**Links:**
+Adam Benzan, <a href="/A401129/a401129.pdf">An exact reachability criterion for digit-sum-bounded lattice walks</a>, 2026 (proof of the criterion, the counting recursion, and the asymptotic constant; upload paper/criterion.pdf as a401129.pdf).
 
 **Program (Python):**
 ```python
@@ -75,7 +77,7 @@ def a(n, b=10):
 ```
 
 **Crossrefs:** A401130 (quadrant version), A002054 (base-2 quadrant
-analogue), A007953 (digit sum).
+analogue), A051885 (least integer with given digit sum), A007953 (digit sum).
 
 **Keywords:** nonn, base, walk
 
@@ -96,15 +98,23 @@ satisfying digitsum(x) + digitsum(y) <= n.
 7188327486499, 10126506243476, 13710262816822, 17988292277865, 23004329420040, 74312310753556, 159428313739802, 283975923798831, 453606512326467, 673904384659102, 950290797504473, 1287929185744999, 1691633917678173, 2165784809170181, 6999810433761324
 
 **Comments:**
-- Quadrant version of A401129: A401129(n) = 4*a(n) - 4*w(n) + 1 with w(n) the
-  least integer with digit sum n+1.
+- Quadrant version of A401129: A401129(n) = 4*a(n) - 4*A051885(n+1) + 1, where
+  A051885(n+1) is the least integer with digit sum n+1.
 - In base 2 the same construction gives binomial(2n+3, n) = A002054(n+1)
   exactly, via a reflection argument on the interleaved-bit walk.
 - Same reachability criterion as A401129; the program below is the same walk
   DP without the final full-plane conversion.
 
+**Example:**
+For n = 1 the reachable points in the first quadrant are (0,0), (1,0) and
+(0,1), so a(1) = 3. For n = 19 the point (300,0) is not counted despite
+digitsum(300) = 3, because the column x = 299 (digit sum 20) walls it off.
+
+**Links:**
+Adam Benzan, <a href="/A401129/a401129.pdf">An exact reachability criterion for digit-sum-bounded lattice walks</a>, 2026 (proof; file stored with A401129).
+
 **Crossrefs:** A401129 (full-plane version), A002054 (base-2 analogue),
-A007953 (digit sum).
+A051885 (least integer with given digit sum), A007953 (digit sum).
 
 **Keywords:** nonn, base, walk
 
