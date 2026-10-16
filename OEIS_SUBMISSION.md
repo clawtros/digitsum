@@ -3,7 +3,7 @@
 Prepared from the digitsum project (see FINDINGS.md, PROOF.md, and paper/ in
 the repository). A-numbers A401129 (full plane) and A401130 (quadrant) were
 allocated 2026-10-15. Two related sequences; the second is the quadrant version
-whose base-2 analogue is already in the OEIS as A002054. Data verified by
+whose base-2 analog is already in the OEIS as A002054. Data verified by
 three independent programs (BFS, tank solver, criterion DP; integer equality).
 Feel free to trim comments to OEIS house style.
 
@@ -37,7 +37,7 @@ digitsum(|x|) + digitsum(|y|) <= n.
   c = (6/sqrt(Pi)) * exp((1/2) * Sum_{m>=1} p_m/m) = 3.847174895...,
   with p_m the probability that a sum of 2m independent uniform digits equals
   9m (a Sparre Andersen / Wiener-Hopf constant).
-- The base-2 analogue of the quadrant version A401130 is A002054.
+- The base-2 analog of the quadrant version A401130 is A002054.
 
 **Formula:**
 a(n) = 4*A401130(n) - 4*A051885(n+1) + 1, where A051885(n+1) = (r+1)*10^q - 1
@@ -77,7 +77,7 @@ def a(n, b=10):
 ```
 
 **Crossrefs:** A401130 (quadrant version), A002054 (base-2 quadrant
-analogue), A051885 (least integer with given digit sum), A007953 (digit sum).
+analog), A051885 (least integer with given digit sum), A007953 (digit sum).
 
 **Keywords:** nonn, base, walk
 
@@ -113,7 +113,7 @@ digitsum(300) = 3, because the column x = 299 (digit sum 20) walls it off.
 **Links:**
 Adam Benzan, <a href="/A401129/a401129.pdf">An exact reachability criterion for digit-sum-bounded lattice walks</a>, 2026 (proof; file stored with A401129).
 
-**Crossrefs:** A401129 (full-plane version), A002054 (base-2 analogue),
+**Crossrefs:** A401129 (full-plane version), A002054 (base-2 analog),
 A051885 (least integer with given digit sum), A007953 (digit sum).
 
 **Keywords:** nonn, base, walk

@@ -17,7 +17,7 @@ a(n) is the number of lattice points (x, y) connected to the origin by a path of
 a(19) = 102485 answers the classic puzzle of the area accessible to a walker constrained by digit sums (often posed with threshold 19).
 Reachability has an exact characterization: writing x and y with k = floor(n/9) + 1 digits (most significant first), (x, y) with x, y >= 0 is reachable if and only if for every prefix length 1 <= s < k the prefix digit sums satisfy ds(x_prefix) + ds(y_prefix) <= n - 9*(k-s) + 1, and ds(x) + ds(y) <= n. Consequently a(n) is computed by a one-dimensional dynamic program over the walk d_s (see Program), in time polynomial in k.
 The fraction of constraint-satisfying points that are reachable decays as c/sqrt(n) on the subsequence n == 8 (mod 9), where c = (6/sqrt(Pi)) * exp((1/2) * Sum_{m>=1} p_m/m) = 3.847174895..., with p_m the probability that a sum of 2m independent uniform digits equals 9m (a Sparre Andersen / Wiener-Hopf constant).
-The base-2 analogue of the quadrant version A401130 is A002054.
+The base-2 analog of the quadrant version A401130 is A002054.
 
 [Formula]
 a(n) = 4*A401130(n) - 4*A051885(n+1) + 1, where A051885(n+1) = (r+1)*10^q - 1 with n+1 = 9*q + r, 1 <= r <= 9, is the least integer with digit sum n+1.
@@ -52,7 +52,7 @@ def a(n, b=10):
     return 4 * Q - 4 * wall + 1
 
 [Crossrefs]
-Cf. A401130 (quadrant version), A002054 (base-2 quadrant analogue), A051885 (least integer with given digit sum), A007953 (digit sum).
+Cf. A401130 (quadrant version), A002054 (base-2 quadrant analog), A051885 (least integer with given digit sum), A007953 (digit sum).
 
 [Keywords]
 nonn, base, walk
@@ -103,7 +103,7 @@ def a(n, b=10):
     return Q
 
 [Crossrefs]
-Cf. A401129 (full-plane version), A002054 (base-2 analogue), A051885 (least integer with given digit sum), A007953 (digit sum).
+Cf. A401129 (full-plane version), A002054 (base-2 analog), A051885 (least integer with given digit sum), A007953 (digit sum).
 
 [Keywords]
 nonn, base, walk
