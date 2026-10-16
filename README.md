@@ -82,7 +82,9 @@ for s in reach scanlines ratio_extended peak_trough depth strip; do python3 digi
 
 ## Code
 
-Python 3.10+ with `numpy`, `pillow` and `matplotlib`. Shared helpers are in
+Python 3.10+ with `numpy`, `pillow` and `matplotlib`, declared in
+`pyproject.toml` (`uv sync` sets up a venv; `uv run digitsum_criterion.py` runs a
+script in it). Shared helpers are in
 `digitsum_lib.py`; everything else is a standalone script that prints to stdout
 or writes a PNG into the current directory. The full table is in `FINDINGS.md`
 under "Scripts". The ones that matter most:
