@@ -32,12 +32,14 @@ points satisfying digitsum(|x|) + digitsum(|y|) <= n.
   sums satisfy ds(x_prefix) + ds(y_prefix) <= n - 9*(k-s) + 1, and
   ds(x) + ds(y) <= n. Consequently a(n) is computed by a one-dimensional
   dynamic program over the walk d_s (see Program), in time polynomial in k.
-- The fraction of constraint-satisfying points that are reachable decays as
-  c/sqrt(n) on the subsequence n == 8 (mod 9), where
+- Every reachable point has |x|, |y| < A051885(n+1). Among the points of that
+  square satisfying digitsum(|x|) + digitsum(|y|) <= n, the fraction that are
+  reachable decays as c/sqrt(n) on the subsequence n == 8 (mod 9), where
   c = (6/sqrt(Pi)) * exp((1/2) * Sum_{m>=1} p_m/m) = 3.847174895...,
   with p_m the probability that a sum of 2m independent uniform digits equals
   9m (a Sparre Andersen / Wiener-Hopf constant).
-- The base-2 analog of the quadrant version A401130 is A002054.
+- The base-2 analog of the quadrant version A401130 is A002054: in base 2 the
+  quadrant count at threshold n is A002054(n+1).
 
 **Formula:**
 a(n) = 4*A401130(n) - 4*A051885(n+1) + 1, where A051885(n+1) = (r+1)*10^q - 1
