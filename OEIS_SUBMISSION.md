@@ -11,9 +11,9 @@ Feel free to trim comments to OEIS house style.
 
 ## Sequence 1 (A401129): full-plane reachable count
 
-**Name:** a(n) is the number of lattice points (x, y) connected to the origin
-by a path of unit horizontal and vertical steps through points satisfying
-digitsum(|x|) + digitsum(|y|) <= n.
+**Name:** a(n) is the number of points (x, y) of the square lattice Z^2
+connected to the origin by a path of unit horizontal and vertical steps through
+points satisfying digitsum(|x|) + digitsum(|y|) <= n.
 
 **Offset:** 1
 
@@ -85,9 +85,10 @@ analog), A051885 (least integer with given digit sum), A007953 (digit sum).
 
 ## Sequence 2 (A401130): quadrant reachable count
 
-**Name:** a(n) is the number of lattice points (x, y) with x, y >= 0 connected
-to the origin by a path of unit steps through points of the first quadrant
-satisfying digitsum(x) + digitsum(y) <= n.
+**Name:** a(n) is the number of points (x, y) of the square lattice Z^2 with
+x, y >= 0 connected to the origin by a path of unit horizontal and vertical
+steps through points of the first quadrant satisfying digitsum(x) + digitsum(y)
+<= n.
 
 **Offset:** 1
 
