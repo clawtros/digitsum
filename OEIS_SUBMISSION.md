@@ -109,10 +109,11 @@ steps through points of the first quadrant satisfying digitsum(x) + digitsum(y)
   DP without the final full-plane conversion.
 
 **Example:**
-For n = 0 only the origin is allowed, so a(0) = 1. For n = 1 the reachable
-points in the first quadrant are (0,0), (1,0) and
-(0,1), so a(1) = 3. For n = 19 the point (300,0) is not counted despite
-digitsum(300) = 3, because the column x = 299 (digit sum 20) walls it off.
+- For n = 0 only the origin is allowed, so a(0) = 1.
+- For n = 1 the reachable points in the first quadrant are (0,0), (1,0) and
+  (0,1), so a(1) = 3.
+- For n = 19 the point (300,0) is not counted despite digitsum(300) = 3, because
+  the column x = 299 (digit sum 20) walls it off.
 
 **Links:**
 Adam Benzan, <a href="/A401129/a401129.pdf">An exact reachability criterion for digit-sum-bounded lattice walks</a>, 2026 (proof; file stored with A401129).
