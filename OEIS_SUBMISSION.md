@@ -46,11 +46,11 @@ a(n) = 4*A401130(n) - 4*A051885(n+1) + 1, where A051885(n+1) = (r+1)*10^q - 1
 with n+1 = 9*q + r, 1 <= r <= 9, is the least integer with digit sum n+1.
 
 **Example:**
-For n = 0 only the origin is allowed, so a(0) = 1. For n = 1 the reachable
-points are (0,0), (+-1,0), (0,+-1): a(1) = 5. The
-point (2,0) is not counted for n = 1 since digitsum(2) = 2 > 1; the point
-(300,0) is not counted for n = 19 despite digitsum(300) = 3, because every
-path to it must pass the column |x| = 299 whose digit sum 20 exceeds 19.
+- For n = 0 only the origin is allowed, so a(0) = 1.
+- For n = 1 the reachable points are (0,0), (+-1,0), (0,+-1): a(1) = 5.
+- The point (2,0) is not counted for n = 1 since digitsum(2) = 2 > 1; the point
+  (300,0) is not counted for n = 19 despite digitsum(300) = 3, because every
+  path to it must pass the column |x| = 299 whose digit sum 20 exceeds 19.
 
 **Links:**
 Adam Benzan, <a href="/A401129/a401129.pdf">An exact reachability criterion for digit-sum-bounded lattice walks</a>, 2026 (proof of the criterion, the counting recursion, and the asymptotic constant; upload paper/criterion.pdf as a401129.pdf).
