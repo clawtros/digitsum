@@ -45,7 +45,7 @@ Consequences, all proved in `paper/criterion.pdf`:
 The base-10 sequences were submitted on 2026-10-15 and are under editor review:
 
 - [A401129](https://oeis.org/A401129): reachable cells in the full plane
-  (5, 13, 25, 41, 61, 85, 113, 145, 505, ..., a(19) = 102485).
+  (1, 5, 13, 25, 41, 61, 85, 113, 145, 505, ..., a(19) = 102485).
 - [A401130](https://oeis.org/A401130): reachable cells in the closed first
   quadrant. The full-plane count is `4*A401130(n) - 4*A051885(n+1) + 1`.
 
