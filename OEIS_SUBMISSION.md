@@ -102,8 +102,9 @@ steps through points of the first quadrant satisfying digitsum(x) + digitsum(y)
 7188327486499, 10126506243476, 13710262816822, 17988292277865, 23004329420040, 74312310753556, 159428313739802, 283975923798831, 453606512326467, 673904384659102, 950290797504473, 1287929185744999, 1691633917678173, 2165784809170181, 6999810433761324
 
 **Comments:**
-- In base 2 the same construction gives binomial(2n+3, n) = A002054(n+1)
-  exactly, via a reflection argument on the interleaved-bit walk.
+- With binary digit sums in place of decimal ones, the count is
+  binomial(2n+3, n) = A002054(n+1) exactly, via a reflection argument on the
+  interleaved-bit walk.
 - Same reachability criterion as A401129; the program below is the same walk
   DP without the final full-plane conversion.
 
