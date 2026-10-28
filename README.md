@@ -42,7 +42,8 @@ Consequences, all proved in `paper/criterion.pdf`:
 
 ## OEIS
 
-The base-10 sequences were submitted on 2026-10-15 and are under editor review:
+The base-10 sequences were submitted on 2026-10-15. A401129 was approved on
+2026-10-28; A401130 is still under editor review:
 
 - [A401129](https://oeis.org/A401129): reachable cells in the full plane
   (1, 5, 13, 25, 41, 61, 85, 113, 145, 505, ..., a(19) = 102485).
